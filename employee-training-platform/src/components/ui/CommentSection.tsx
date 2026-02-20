@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Button, Input, List, Tag, message, Popconfirm, Space } from 'antd';
+import { Avatar, Button, Input, Tag, message, Popconfirm, Space } from 'antd';
 import { UserOutlined, SendOutlined, MessageOutlined, EditOutlined, DeleteOutlined, RollbackOutlined } from '@ant-design/icons';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -121,87 +121,82 @@ export const CommentSection: React.FC<CommentSectionProps> = ({ lessonId }) => {
         return (
             <div key={item.id} className={`${isReply ? 'ml-12 mt-2 border-l-2 border-slate-100 pl-6' : ''}`}>
                 <div className={`p-4 rounded-2xl transition-all ${isEditing ? 'bg-blue-50/50 ring-1 ring-blue-200' : 'hover:bg-slate-50/50'}`}>
-                    <List.Item.Meta
-                        avatar={
-                            <Avatar
-                                size={isReply ? 32 : 40}
-                                className={`${item.userRole === 'admin' ? 'bg-amber-500 shadow-amber-100' : 'bg-slate-200'}`}
-                                icon={<UserOutlined />}
-                            />
-                        }
-                        title={
-                            <div className="flex items-center gap-3 mb-1">
-                                <span className={`font-black text-slate-900 ${isReply ? 'text-xs' : 'text-sm'}`}>{item.userName}</span>
-                                {item.userRole === 'admin' && (
-                                    <Tag className="bg-amber-100 text-amber-600 border-none text-[9px] font-black uppercase px-2 py-0.5 rounded-full scale-90">官方導師</Tag>
-                                )}
-                                <span className="text-[10px] text-slate-300 font-medium ml-auto">
-                                    {new Date(item.timestamp).toLocaleString()}
-                                </span>
-                            </div>
-                        }
-                        description={
-                            <div className="mt-2">
-                                {isEditing ? (
-                                    <div className="space-y-3">
-                                        <Input.TextArea
-                                            value={editValue}
-                                            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditValue(e.target.value)}
-                                            autoSize={{ minRows: 2 }}
-                                            className="rounded-xl border-slate-200"
-                                        />
-                                        <Space>
-                                            <Button size="small" type="primary" onClick={() => handleUpdate(item.id)} className="rounded-lg font-bold">儲存變更</Button>
-                                            <Button size="small" onClick={() => setEditingId(null)} className="rounded-lg font-bold">取消</Button>
-                                        </Space>
-                                    </div>
-                                ) : (
-                                    <div className="text-slate-600 text-[13px] font-medium leading-relaxed whitespace-pre-wrap">
-                                        {item.content}
-                                    </div>
-                                )}
+                    <div className="flex items-center gap-3 mb-2">
+                        <Avatar
+                            size={isReply ? 28 : 32}
+                            className={`${item.userRole === 'admin' ? 'bg-amber-500 shadow-amber-100' : 'bg-slate-200'}`}
+                            icon={<UserOutlined />}
+                        />
+                        <div className="flex items-center gap-2 flex-grow">
+                            <span className={`font-black text-slate-900 ${isReply ? 'text-xs' : 'text-sm'}`}>{item.userName}</span>
+                            {item.userRole === 'admin' && (
+                                <Tag className="bg-amber-100 text-amber-600 border-none text-[9px] font-black uppercase px-2 py-0.5 rounded-full scale-90">官方導師</Tag>
+                            )}
+                            <span className="text-[10px] text-slate-300 font-medium ml-auto">
+                                {new Date(item.timestamp).toLocaleString()}
+                            </span>
+                        </div>
+                    </div>
 
-                                {/* Action Buttons */}
-                                {!isEditing && user && (
-                                    <div className="flex gap-4 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <Button
-                                            type="link"
-                                            size="small"
-                                            icon={<RollbackOutlined />}
-                                            className="p-0 text-[11px] text-slate-400 font-bold hover:text-blue-600"
-                                            onClick={() => {
-                                                setReplyingToId(isReplying ? null : item.id);
-                                                setReplyValue('');
-                                            }}
-                                        >
-                                            回覆
+                    <div className="pl-0 sm:pl-11">
+                        {isEditing ? (
+                            <div className="space-y-3">
+                                <Input.TextArea
+                                    value={editValue}
+                                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditValue(e.target.value)}
+                                    autoSize={{ minRows: 2 }}
+                                    className="rounded-xl border-slate-200"
+                                />
+                                <Space>
+                                    <Button size="small" type="primary" onClick={() => handleUpdate(item.id)} className="rounded-lg font-bold">儲存變更</Button>
+                                    <Button size="small" onClick={() => setEditingId(null)} className="rounded-lg font-bold">取消</Button>
+                                </Space>
+                            </div>
+                        ) : (
+                            <div className="text-slate-600 text-[13px] font-medium leading-relaxed whitespace-pre-wrap">
+                                {item.content}
+                            </div>
+                        )}
+
+                        {/* Action Buttons */}
+                        {!isEditing && user && (
+                            <div className="flex gap-4 mt-3 transition-opacity">
+                                <Button
+                                    type="link"
+                                    size="small"
+                                    icon={<RollbackOutlined />}
+                                    className="p-0 text-[11px] text-slate-400 font-bold hover:text-blue-600"
+                                    onClick={() => {
+                                        setReplyingToId(isReplying ? null : item.id);
+                                        setReplyValue('');
+                                    }}
+                                >
+                                    回覆
+                                </Button>
+                                {user.id === item.userId && (
+                                    <Button
+                                        type="link"
+                                        size="small"
+                                        icon={<EditOutlined />}
+                                        className="p-0 text-[11px] text-slate-400 font-bold hover:text-amber-600"
+                                        onClick={() => {
+                                            setEditingId(item.id);
+                                            setEditValue(item.content);
+                                        }}
+                                    >
+                                        編輯
+                                    </Button>
+                                )}
+                                {canManage && (
+                                    <Popconfirm title="確定要刪除這條留言嗎？" onConfirm={() => handleDelete(item.id)} okText="確定" cancelText="取消">
+                                        <Button type="link" size="small" icon={<DeleteOutlined />} danger className="p-0 text-[11px] font-bold">
+                                            刪除
                                         </Button>
-                                        {user.id === item.userId && (
-                                            <Button
-                                                type="link"
-                                                size="small"
-                                                icon={<EditOutlined />}
-                                                className="p-0 text-[11px] text-slate-400 font-bold hover:text-amber-600"
-                                                onClick={() => {
-                                                    setEditingId(item.id);
-                                                    setEditValue(item.content);
-                                                }}
-                                            >
-                                                編輯
-                                            </Button>
-                                        )}
-                                        {canManage && (
-                                            <Popconfirm title="確定要刪除這條留言嗎？" onConfirm={() => handleDelete(item.id)} okText="確定" cancelText="取消">
-                                                <Button type="link" size="small" icon={<DeleteOutlined />} danger className="p-0 text-[11px] font-bold">
-                                                    刪除
-                                                </Button>
-                                            </Popconfirm>
-                                        )}
-                                    </div>
+                                    </Popconfirm>
                                 )}
                             </div>
-                        }
-                    />
+                        )}
+                    </div>
                 </div>
 
                 {/* Reply Input Area */}
@@ -240,30 +235,33 @@ export const CommentSection: React.FC<CommentSectionProps> = ({ lessonId }) => {
             </div>
 
             {/* Main Input Section */}
-            <div className="flex gap-4 mb-10 bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                <Avatar size={40} icon={<UserOutlined />} className="bg-blue-600 shrink-0 shadow-sm" />
-                <div className="flex-grow flex flex-col gap-3">
-                    <Input.TextArea
-                        value={inputValue}
-                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInputValue(e.target.value)}
-                        placeholder="有什麼問題想問老師嗎？"
-                        autoSize={{ minRows: 2, maxRows: 6 }}
-                        className="rounded-xl border-none shadow-sm placeholder:text-slate-300 font-medium p-3"
-                    />
-                    <div className="flex justify-between items-center">
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">
-                            以 <span className="text-blue-600">{user?.name}</span> ({user?.role === 'admin' ? '導師' : '學員'}) 身分發言
+            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 mb-10">
+                <div className="flex items-center gap-3 mb-4">
+                    <Avatar size={32} icon={<UserOutlined />} className="bg-blue-600 shadow-sm" />
+                    <span className="text-sm font-black text-slate-800">
+                        {user?.name}
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider ml-2 px-2 py-0.5 bg-white rounded-md border border-slate-200">
+                            {user?.role === 'admin' ? '導師' : '學員'}
                         </span>
-                        <Button
-                            type="primary"
-                            icon={<SendOutlined />}
-                            onClick={handleSubmit}
-                            disabled={!inputValue.trim()}
-                            className="bg-blue-600 border-none rounded-xl h-9 px-6 font-bold shadow-lg shadow-blue-100 flex items-center"
-                        >
-                            送出問題
-                        </Button>
-                    </div>
+                    </span>
+                </div>
+                <Input.TextArea
+                    value={inputValue}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setInputValue(e.target.value)}
+                    placeholder="有什麼問題想問老師嗎？"
+                    autoSize={{ minRows: 2, maxRows: 6 }}
+                    className="rounded-xl border-none shadow-sm placeholder:text-slate-300 font-medium p-3 mb-3"
+                />
+                <div className="flex justify-end">
+                    <Button
+                        type="primary"
+                        icon={<SendOutlined />}
+                        onClick={handleSubmit}
+                        disabled={!inputValue.trim()}
+                        className="bg-blue-600 border-none rounded-xl h-9 px-6 font-bold shadow-lg shadow-blue-100 flex items-center"
+                    >
+                        送出問題
+                    </Button>
                 </div>
             </div>
 
