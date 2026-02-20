@@ -1,0 +1,22 @@
+services:
+  app:
+    build: .
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  training-platform:
+    build: .
+    ports:
+      - "5174:5174"
+    volumes:
+      - ./employee-training-platform:/app
+      - /app/node_modules
+    working_dir: /app
+    command: npm run dev
+    environment:
+      - CHOKIDAR_USEPOLLING=true
