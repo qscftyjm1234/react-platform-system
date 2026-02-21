@@ -130,16 +130,22 @@ export const MainLayout: React.FC = () => {
                             type: 'divider'
                         },
                         user?.role === 'admin' ? {
-                            key: 'employees',
-                            icon: <TeamOutlined />,
-                            label: '員工管理中心',
-                            onClick: () => navigate('/admin/employees')
-                        } : null,
-                        user?.role === 'admin' ? {
-                            key: 'settings',
-                            icon: <SettingOutlined />,
-                            label: '系統環境設定',
-                            onClick: () => navigate('/admin/settings')
+                            type: 'group',
+                            label: collapsed ? '' : '系統管理中心',
+                            children: [
+                                {
+                                    key: 'employees',
+                                    icon: <TeamOutlined />,
+                                    label: '員工管理中心',
+                                    onClick: () => navigate('/admin/employees')
+                                },
+                                {
+                                    key: 'settings',
+                                    icon: <SettingOutlined />,
+                                    label: '培訓策略設定',
+                                    onClick: () => navigate('/admin/settings')
+                                }
+                            ]
                         } : null,
                     ].filter(Boolean) as any}
                 />

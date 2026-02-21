@@ -89,10 +89,10 @@ export const SystemSettings: React.FC = () => {
             <div className="relative overflow-hidden bg-gradient-to-r from-blue-700 to-indigo-800 rounded-3xl p-8 lg:p-12 text-white shadow-2xl shadow-blue-100">
                 <div className="relative z-10">
                     <Tag color="blue" className="bg-white/10 border-none text-blue-100 mb-4 px-3 py-1 rounded-md text-xs font-bold uppercase tracking-widest leading-none">
-                        系統中心 · 環境配置
+                        教務中心 · 策略配置
                     </Tag>
                     <Title level={1} className="!text-white !mb-4 !text-4xl lg:!text-5xl !font-black tracking-tight">
-                        系統環境設定
+                        培訓策略設定
                     </Title>
                     <Text className="text-blue-100/80 text-lg lg:text-xl font-light leading-relaxed block">
                         在這裡您可以管理組織架構，並定義基於 <span className="text-white font-bold underline decoration-blue-400 underline-offset-4">部門與角色</span> 的自動化學習路徑。
