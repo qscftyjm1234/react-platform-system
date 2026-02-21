@@ -2,30 +2,27 @@ import React, { useState } from 'react';
 import {
     Tabs,
     Card,
-    Table,
     Button,
     Tag,
     Space,
     Typography,
-    Modal,
     Form,
-    Input,
     Checkbox,
     Row,
     Col,
     Divider,
-    message,
-    Select
+    Select,
+    Modal,
+    Input
 } from 'antd';
 import {
-    TeamOutlined,
     PlusOutlined,
     DeleteOutlined,
     EditOutlined,
     SettingOutlined,
     SafetyCertificateOutlined
 } from '@ant-design/icons';
-import { INITIAL_DEPARTMENTS, INITIAL_ASSIGNMENT_RULES, Department, AssignmentRule, CourseGroup } from '@/data/settings';
+import { INITIAL_ASSIGNMENT_RULES, AssignmentRule, CourseGroup } from '@/data/settings';
 import { COURSES, COURSE_GROUPS } from '@/data/courses';
 
 const { Title, Text } = Typography;
@@ -33,10 +30,96 @@ const { TabPane } = Tabs;
 const { Option } = Select;
 
 export const SystemSettings: React.FC = () => {
-    const [rules] = useState<AssignmentRule[]>(INITIAL_ASSIGNMENT_RULES);
+    const [rules, setRules] = useState<AssignmentRule[]>(INITIAL_ASSIGNMENT_RULES);
     const [groups, setGroups] = useState<CourseGroup[]>(COURSE_GROUPS);
     const [isGroupModalVisible, setIsGroupModalVisible] = useState(false);
+    const [isRuleModalVisible, setIsRuleModalVisible] = useState(false);
+    const [editingGroup, setEditingGroup] = useState<CourseGroup | null>(null);
+    const [editingRule, setEditingRule] = useState<AssignmentRule | null>(null);
+
     const [groupForm] = Form.useForm();
+    const [ruleForm] = Form.useForm();
+
+    // --- 群組操作 ---
+    const handleGroupClick = (group?: CourseGroup) => {
+        if (group) {
+            setEditingGroup(group);
+            groupForm.setFieldsValue(group);
+        } else {
+            setEditingGroup(null);
+            groupForm.resetFields();
+        }
+        setIsGroupModalVisible(true);
+    };
+
+    const handleSaveGroup = (values: any) => {
+        if (editingGroup) {
+            setGroups(groups.map(g => g.id === editingGroup.id ? { ...g, ...values } : g));
+            message.success('群組已更新');
+        } else {
+            const newGroup: CourseGroup = {
+                id: `group-${Date.now()}`,
+                ...values
+            };
+            setGroups([...groups, newGroup]);
+            message.success('新群組已建立');
+        }
+        setIsGroupModalVisible(false);
+    };
+
+    const handleDeleteGroup = (id: string) => {
+        Modal.confirm({
+            title: '確定要刪除此群組嗎？',
+            content: '刪除後，所有關聯此群組的分配規則將受到影響。',
+            okText: '確定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk: () => {
+                setGroups(groups.filter(g => g.id !== id));
+                message.success('群組已刪除');
+            }
+        });
+    };
+
+    // --- 規則操作 ---
+    const handleRuleClick = (rule?: AssignmentRule) => {
+        if (rule) {
+            setEditingRule(rule);
+            ruleForm.setFieldsValue(rule);
+        } else {
+            setEditingRule(null);
+            ruleForm.resetFields();
+        }
+        setIsRuleModalVisible(true);
+    };
+
+    const handleSaveRule = (values: any) => {
+        if (editingRule) {
+            setRules(rules.map(r => r.id === editingRule.id ? { ...r, ...values } : r));
+            message.success('規則已更新');
+        } else {
+            const newRule: AssignmentRule = {
+                id: `R${Date.now()}`,
+                ...values
+            };
+            setRules([...rules, newRule]);
+            message.success('新規則已建立');
+        }
+        setIsRuleModalVisible(false);
+    };
+
+    const handleDeleteRule = (id: string) => {
+        Modal.confirm({
+            title: '確定要刪除此分配規則嗎？',
+            okText: '確定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk: () => {
+                setRules(rules.filter(r => r.id !== id));
+                message.success('規則已刪除');
+            }
+        });
+    };
 
 
     return (
@@ -106,8 +189,8 @@ export const SystemSettings: React.FC = () => {
                                             </div>
                                         </Col>
                                         <Col span={4} className="text-right">
-                                            <Button type="text" icon={<EditOutlined />} className="text-gray-400" />
-                                            <Button type="text" icon={<DeleteOutlined />} className="text-red-400" />
+                                            <Button type="text" icon={<EditOutlined />} onClick={() => handleRuleClick(rule)} className="text-gray-400" />
+                                            <Button type="text" icon={<DeleteOutlined />} onClick={() => handleDeleteRule(rule.id)} className="text-red-400" />
                                         </Col>
                                     </Row>
                                 </Card>
@@ -124,7 +207,13 @@ export const SystemSettings: React.FC = () => {
                                 </div>
                             </div>
 
-                            <Button type="dashed" block icon={<PlusOutlined />} className="h-16 rounded-2xl text-gray-400 font-bold border-2">
+                            <Button
+                                type="dashed"
+                                block
+                                icon={<PlusOutlined />}
+                                onClick={() => handleRuleClick()}
+                                className="h-16 rounded-2xl text-gray-400 font-bold border-2"
+                            >
                                 新增分配規則
                             </Button>
                         </div>
@@ -140,7 +229,7 @@ export const SystemSettings: React.FC = () => {
                                 <Title level={4} className="!mb-1">學習路徑 (Learning Paths)</Title>
                                 <Text type="secondary">定義課程群組，簡化大規模課程分配</Text>
                             </div>
-                            <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsGroupModalVisible(true)} className="rounded-xl font-bold h-10 px-6 shadow-md">
+                            <Button type="primary" icon={<PlusOutlined />} onClick={() => handleGroupClick()} className="rounded-xl font-bold h-10 px-6 shadow-md">
                                 建立新群組
                             </Button>
                         </div>
@@ -151,8 +240,8 @@ export const SystemSettings: React.FC = () => {
                                     <div className="flex justify-between items-start mb-4">
                                         <Title level={5} className="!m-0 !font-black !text-gray-800">{group.name}</Title>
                                         <Space>
-                                            <Button type="text" size="small" icon={<EditOutlined />} />
-                                            <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+                                            <Button type="text" size="small" icon={<EditOutlined />} onClick={() => handleGroupClick(group)} />
+                                            <Button type="text" size="small" danger icon={<DeleteOutlined />} onClick={() => handleDeleteGroup(group.id)} />
                                         </Space>
                                     </div>
                                     <p className="text-gray-500 mb-6 text-sm line-clamp-2">{group.description}</p>
