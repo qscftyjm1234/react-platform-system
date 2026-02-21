@@ -13,19 +13,19 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
-import { reactLessons } from '@/data/reactLessons';
+import { dockerLessons } from '@/data/dockerLessons';
 import { useAuth } from '@/contexts/AuthContext';
 
 const { Title, Text } = Typography;
 
-export const ReactCoursePage: React.FC = () => {
+export const DockerCoursePage: React.FC = () => {
     const navigate = useNavigate();
     const { user, completedLessons } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
     const searchInputRef = useRef<any>(null);
 
     // Data source
-    const lessons = reactLessons;
+    const lessons = dockerLessons;
 
     // Filtered lessons
     const filteredLessons = useMemo(() => {
@@ -61,23 +61,23 @@ export const ReactCoursePage: React.FC = () => {
                     <Breadcrumb
                         items={[
                             { title: <span className="text-slate-400 font-medium hover:text-slate-600 cursor-pointer transition-colors" onClick={() => navigate('/')}>學習儀表板</span> },
-                            { title: <span className="text-slate-900 font-semibold">React 新手教學</span> },
+                            { title: <span className="text-slate-900 font-semibold">Docker 實戰大師</span> },
                         ]}
                         className="text-[12px] font-medium"
                     />
-                    <Tag className="bg-slate-100 border-slate-200 text-slate-500 font-black px-2 py-0 rounded-md m-0 text-[10px] uppercase tracking-tight">企業級專案</Tag>
+                    <Tag className="bg-slate-100 border-slate-200 text-slate-500 font-black px-2 py-0 rounded-md m-0 text-[10px] uppercase tracking-tight">環境佈署</Tag>
                 </div>
 
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
                     <div className="max-w-3xl">
                         <div className="flex items-center gap-4 mb-3">
-                            <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm ring-1 ring-blue-700/10">
+                            <div className="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm ring-1 ring-indigo-700/10">
                                 <ThunderboltFilled />
                             </div>
-                            <Title level={1} style={{ margin: 0, fontSize: '2rem', fontWeight: 900 }} className="text-slate-900 tracking-tighter">React 新手教學</Title>
+                            <Title level={1} style={{ margin: 0, fontSize: '2rem', fontWeight: 900 }} className="text-slate-900 tracking-tighter">Docker 實戰大師</Title>
                         </div>
                         <Text className="text-slate-500 text-base font-medium leading-relaxed block max-w-2xl">
-                            掌握現代前端開發的核心標準。從基礎語法到架構設計，建立符合企業需求的開發邏輯。
+                            掌握容器技術核心，提升開發效率與環境一致性。從廚房哲學到雲端部署，建立專業的 DevOps 思維。
                         </Text>
                     </div>
 
@@ -90,7 +90,7 @@ export const ReactCoursePage: React.FC = () => {
                                 </div>
                                 <Progress
                                     percent={progressPercent}
-                                    strokeColor="#2563eb"
+                                    strokeColor="#4f46e5"
                                     trailColor="#f1f5f9"
                                     showInfo={false}
                                     strokeWidth={4}
@@ -119,7 +119,7 @@ export const ReactCoursePage: React.FC = () => {
                                 prefix={<SearchOutlined className="text-slate-300" />}
                                 value={searchTerm}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
-                                className="rounded-xl border-slate-200 focus:border-blue-500 hover:border-blue-300 h-10 transition-all font-medium"
+                                className="rounded-xl border-slate-200 focus:border-indigo-500 hover:border-indigo-300 h-10 transition-all font-medium"
                                 allowClear
                             />
                         </div>
@@ -138,7 +138,7 @@ export const ReactCoursePage: React.FC = () => {
                                         key={item.id}
                                         className={`group relative flex items-center justify-between p-4 pl-0 rounded-xl border transition-all duration-200 ${isLocked
                                             ? 'bg-slate-50/40 border-slate-100 opacity-60'
-                                            : 'bg-white border-slate-200/60 hover:border-blue-200 hover:shadow-sm'
+                                            : 'bg-white border-slate-200/60 hover:border-indigo-200 hover:shadow-sm'
                                             }`}
                                     >
                                         <div className="flex items-center gap-2 flex-grow">
@@ -158,14 +158,14 @@ export const ReactCoursePage: React.FC = () => {
                                                 <div className="min-w-[260px]">
                                                     <div className="flex items-center gap-2 mb-1">
                                                         <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${item.level === '初階' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
-                                                            item.level === '中階' ? 'bg-blue-50 text-blue-600 border border-blue-100' :
+                                                            item.level === '中階' ? 'bg-indigo-50 text-indigo-600 border border-indigo-100' :
                                                                 'bg-amber-50 text-amber-600 border border-amber-100'
                                                             }`}>
                                                             {item.level}
                                                         </span>
                                                         <span className="text-slate-400 text-[10px] uppercase font-bold tracking-tight opacity-60">{item.type}</span>
                                                     </div>
-                                                    <h4 className={`text-[15px] font-bold m-0 transition-colors ${isLocked ? 'text-slate-400' : 'text-slate-900 group-hover:text-blue-600'
+                                                    <h4 className={`text-[15px] font-bold m-0 transition-colors ${isLocked ? 'text-slate-400' : 'text-slate-900 group-hover:text-indigo-600'
                                                         }`}>
                                                         {item.title}
                                                     </h4>
@@ -185,8 +185,8 @@ export const ReactCoursePage: React.FC = () => {
                                                 <Button
                                                     type="text"
                                                     icon={<PlayCircleOutlined />}
-                                                    className="rounded-xl h-10 w-10 flex items-center justify-center transition-all bg-white border border-slate-200 text-slate-400 hover:bg-blue-600 hover:border-blue-600 hover:text-white hover:shadow-lg hover:shadow-blue-100 hover:scale-105"
-                                                    onClick={() => navigate(`/courses/react/lesson/${item.id}`)}
+                                                    className="rounded-xl h-10 w-10 flex items-center justify-center transition-all bg-white border border-slate-200 text-slate-400 hover:bg-indigo-600 hover:border-indigo-600 hover:text-white hover:shadow-lg hover:shadow-indigo-100 hover:scale-105"
+                                                    onClick={() => navigate(`/courses/docker/lesson/${item.id}`)}
                                                 />
                                             )}
                                         </div>
@@ -199,7 +199,7 @@ export const ReactCoursePage: React.FC = () => {
                                     description={<span className="text-slate-400 font-bold">找不到與「{searchTerm}」相關的課程單元</span>}
                                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                                 />
-                                <Button type="link" onClick={() => setSearchTerm('')} className="font-bold text-blue-600">清除搜尋條件</Button>
+                                <Button type="link" onClick={() => setSearchTerm('')} className="font-bold text-indigo-600">清除搜尋條件</Button>
                             </div>
                         )}
                     </div>
@@ -209,14 +209,14 @@ export const ReactCoursePage: React.FC = () => {
                 <div className="lg:col-span-4 space-y-8">
                     <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-slate-100/50">
                         <div className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-8 border-b border-slate-100 pb-4 flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                            <div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
                             課程概覽數據
                         </div>
 
                         <div className="space-y-6 mb-10">
-                            <SidebarInfoItem icon={<UserOutlined />} label="適合對象" value="前端開發工程師" />
+                            <SidebarInfoItem icon={<UserOutlined />} label="適合對象" value="全端與後端工程師" />
                             <SidebarInfoItem icon={<BookOutlined />} label="模組數量" value={`${lessons.length} 個專業單元`} />
-                            <SidebarInfoItem icon={<PlayCircleOutlined />} label="教學形式" value="互動式引導與動手實作" />
+                            <SidebarInfoItem icon={<PlayCircleOutlined />} label="教學形式" value="情境引導與故障排除" />
                         </div>
 
                         <Tooltip title={!isFullProgress ? "需完成 100% 課程單元方可領取證書" : ""}>
@@ -242,7 +242,7 @@ export const ReactCoursePage: React.FC = () => {
                             </div>
                         </div>
                         <p className="text-slate-500 text-[13px] leading-relaxed font-medium mb-0">
-                            深耕 React 4天，帶你從入門到精通。
+                            專注於開發流程自動化，帶你用最直觀的方式掌握 Docker。
                         </p>
                     </div>
                 </div>
@@ -255,7 +255,7 @@ const SidebarInfoItem = ({ icon, label, value }: { icon: React.ReactNode, label:
     <div className="flex flex-col gap-1.5">
         <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{label}</span>
         <div className="flex items-center gap-2.5">
-            <span className="text-blue-600 opacity-80">{icon}</span>
+            <span className="text-indigo-600 opacity-80">{icon}</span>
             <span className="font-bold text-slate-700 text-[13px]">{value}</span>
         </div>
     </div>

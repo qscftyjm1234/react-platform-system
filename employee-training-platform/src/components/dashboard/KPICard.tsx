@@ -35,7 +35,7 @@ export const KPICard: React.FC<KPICardProps> = ({ title, value, trend, trendLabe
                     {Math.abs(trend)}%
                 </span>
                 <span className="text-gray-400 ml-2">
-                    {trendLabel || 'vs last month'}
+                    {trendLabel || '與上月相比'}
                 </span>
             </div>
         </div>

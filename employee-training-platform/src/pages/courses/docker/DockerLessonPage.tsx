@@ -13,7 +13,7 @@ import {
     InfoCircleOutlined,
     DownloadOutlined
 } from '@ant-design/icons';
-import { reactLessons } from '@/data/reactLessons';
+import { dockerLessons } from '@/data/dockerLessons';
 import { CodeBlock } from '@/components/ui/CodeBlock';
 import { Playground } from '@/components/ui/Playground';
 import { useAuth } from '@/contexts/AuthContext';
@@ -23,25 +23,24 @@ import { CommentSection } from '@/components/ui/CommentSection';
 
 const { Title, Text } = Typography;
 
-export const LessonPage: React.FC = () => {
+export const DockerLessonPage: React.FC = () => {
     const { lessonId } = useParams();
     const navigate = useNavigate();
     const { user, completeLesson, completedLessons, isLessonUnlocked } = useAuth();
     const [activeSection, setActiveSection] = React.useState(0);
     const [scrolled, setScrolled] = React.useState(false);
-    const [activeCompareTab, setActiveCompareTab] = React.useState(0);
 
-    const lessonIndex = reactLessons.findIndex(l => l.id === lessonId);
-    const lesson = reactLessons[lessonIndex];
-    const prevLesson = lessonIndex > 0 ? reactLessons[lessonIndex - 1] : null;
-    const nextLesson = lessonIndex < reactLessons.length - 1 ? reactLessons[lessonIndex + 1] : null;
+    const lessonIndex = dockerLessons.findIndex(l => l.id === lessonId);
+    const lesson = dockerLessons[lessonIndex];
+    const prevLesson = lessonIndex > 0 ? dockerLessons[lessonIndex - 1] : null;
+    const nextLesson = lessonIndex < dockerLessons.length - 1 ? dockerLessons[lessonIndex + 1] : null;
 
     const isCompleted = lesson ? completedLessons.includes(lesson.id) : false;
     const isUnlocked = lesson ? isLessonUnlocked(lesson.id, prevLesson?.id) : false;
 
+
     // Reset UI state when lesson changes
     React.useEffect(() => {
-        setActiveCompareTab(0);
         // Scroll to top of the main content area
         const container = document.querySelector('main');
         if (container) {
@@ -77,7 +76,6 @@ export const LessonPage: React.FC = () => {
                 const el = document.getElementById(sections[i].id);
                 if (el) {
                     const rect = el.getBoundingClientRect();
-                    // rect.top is relative to viewport. Trigger when section hits top 30%
                     if (rect.top <= triggerLine + 100) {
                         activeIndex = i;
                     }
@@ -119,8 +117,8 @@ export const LessonPage: React.FC = () => {
                     type="primary"
                     size="large"
                     icon={<ArrowLeftOutlined />}
-                    onClick={() => navigate('/courses/react')}
-                    className="bg-blue-600 border-none rounded-xl h-11 px-6 font-bold shadow-lg shadow-blue-100"
+                    onClick={() => navigate('/courses/docker')}
+                    className="bg-indigo-600 border-none rounded-xl h-11 px-6 font-bold shadow-lg shadow-indigo-100"
                 >
                     返回課程清單
                 </Button>
@@ -128,43 +126,9 @@ export const LessonPage: React.FC = () => {
         );
     }
 
-    if (!isUnlocked && user?.role !== 'admin') {
-        return (
-            <div className="max-w-[800px] mx-auto py-20 px-8 text-center bg-white rounded-[3rem] border-2 border-slate-50 shadow-xl mt-12 animate-in zoom-in-95 duration-500">
-                <div className="w-24 h-24 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
-                    <LockOutlined style={{ fontSize: '40px' }} />
-                </div>
-                <h1 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">單元尚未解鎖</h1>
-                <p className="text-slate-500 text-lg font-medium mb-8 max-w-md mx-auto">
-                    請先完成前一單元「<span className="text-blue-600">{prevLesson?.title}</span>」，方可進入此單元。
-                </p>
-                <div className="flex justify-center gap-4">
-                    <Button 
-                        size="large" 
-                        shape="round" 
-                        icon={<ArrowLeftOutlined />} 
-                        onClick={() => navigate('/courses/react')}
-                        className="h-14 px-8 font-bold border-slate-200 text-slate-600"
-                    >
-                        返回課程清單
-                    </Button>
-                    <Button 
-                        type="primary" 
-                        size="large" 
-                        shape="round" 
-                        onClick={() => prevLesson && navigate(`/courses/react/lesson/${prevLesson.id}`)}
-                        className="h-14 px-8 font-black bg-blue-600 border-none shadow-lg shadow-blue-100"
-                    >
-                        前往前一單元
-                    </Button>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="relative min-h-screen bg-white">
-            {/* Elite Floating Header */}
+            {/* Floating Header */}
             <header className={`sticky top-0 z-50 transition-all duration-300 border-b ${scrolled ? 'bg-white/80 backdrop-blur-md border-slate-200 py-3 shadow-sm' : 'bg-white/50 border-transparent py-4'
                 }`}>
                 <div className="max-w-[1400px] mx-auto px-4 md:px-8 flex items-center justify-between">
@@ -173,7 +137,7 @@ export const LessonPage: React.FC = () => {
                             <Button
                                 type="text"
                                 icon={<ArrowLeftOutlined />}
-                                onClick={() => navigate('/courses/react')}
+                                onClick={() => navigate('/courses/docker')}
                                 className="w-10 h-10 rounded-xl hover:bg-slate-100 flex items-center justify-center text-slate-500"
                             />
                         </Tooltip>
@@ -181,7 +145,7 @@ export const LessonPage: React.FC = () => {
                         <div className="hidden md:block">
                             <Breadcrumb
                                 items={[
-                                    { title: <span className="text-slate-400 hover:text-slate-600 cursor-pointer text-xs font-semibold uppercase tracking-wider" onClick={() => navigate('/courses/react')}>核心技術</span> },
+                                    { title: <span className="text-slate-400 hover:text-slate-600 cursor-pointer text-xs font-semibold uppercase tracking-wider" onClick={() => navigate('/courses/docker')}>Docker 實戰</span> },
                                     { title: <span className="text-slate-900 text-xs font-black uppercase tracking-wider">{lesson.title}</span> },
                                 ]}
                             />
@@ -189,14 +153,10 @@ export const LessonPage: React.FC = () => {
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <Button icon={<ShareAltOutlined />} type="text" className="rounded-lg text-slate-400 font-bold text-xs hover:text-blue-600 transition-colors">分享單元</Button>
-                        <Button icon={<MoreOutlined />} type="text" className="rounded-lg text-slate-400 hover:text-blue-600 transition-colors" />
+                        <Button icon={<ShareAltOutlined />} type="text" className="rounded-lg text-slate-400 font-bold text-xs hover:text-indigo-600 transition-colors">分享單元</Button>
+                        <Button icon={<MoreOutlined />} type="text" className="rounded-lg text-slate-400 hover:text-indigo-600 transition-colors" />
                         <div className="ml-4 pl-4 border-l border-slate-200 flex items-center gap-3">
-                            <div className="text-right hidden sm:block">
-                                <div className="text-[10px] font-black text-slate-400 uppercase leading-none mb-1">當前狀態</div>
-                                <div className="text-[11px] font-bold text-emerald-600 uppercase tracking-tighter transition-all">正在學習中</div>
-                            </div>
-                            <Avatar size={36} className="bg-blue-600 ring-4 ring-blue-50 border border-blue-200 font-black text-white">A</Avatar>
+                            <Avatar size={36} className="bg-indigo-600 ring-4 ring-indigo-50 border border-indigo-200 font-black text-white">A</Avatar>
                         </div>
                     </div>
                 </div>
@@ -204,11 +164,10 @@ export const LessonPage: React.FC = () => {
 
             <main className="max-w-[1400px] mx-auto px-4 md:px-8 pt-6 pb-24">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-
                     {/* Main Content Workspace */}
                     <div className="lg:col-span-8">
                         <div className="mb-12 space-y-4">
-                            <Tag className="bg-blue-600 border-none text-white font-black px-3 py-0.5 rounded-full m-0 text-[10px] tracking-[0.2em] uppercase shadow-lg shadow-blue-100">
+                            <Tag className="bg-indigo-600 border-none text-white font-black px-3 py-0.5 rounded-full m-0 text-[10px] tracking-[0.2em] uppercase shadow-lg shadow-indigo-100">
                                 單元 {lessonId}
                             </Tag>
                             <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight leading-[1.2]">
@@ -244,14 +203,14 @@ export const LessonPage: React.FC = () => {
                                             )}
 
                                             {item.action && (
-                                                <div className="p-1 border border-blue-100 rounded-2xl bg-blue-50/30 mb-8 inline-block">
+                                                <div className="p-1 border border-indigo-100 rounded-2xl bg-indigo-50/30 mb-8 inline-block">
                                                     <Button
                                                         type="primary"
                                                         size="large"
                                                         icon={<DownloadOutlined />}
                                                         href={item.action.href}
                                                         target="_blank"
-                                                        className="h-12 px-8 rounded-xl bg-blue-600 border-none font-black text-xs hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 uppercase tracking-widest"
+                                                        className="h-12 px-8 rounded-xl bg-indigo-600 border-none font-black text-xs hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 uppercase tracking-widest"
                                                     >
                                                         {item.action.label}
                                                     </Button>
@@ -261,11 +220,11 @@ export const LessonPage: React.FC = () => {
                                             {item.commandBreakdown && (
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                                                     {item.commandBreakdown.map((part, pIdx) => (
-                                                        <div key={pIdx} className="p-5 bg-white border border-slate-200 rounded-2xl hover:border-blue-300 transition-all duration-300 hover:shadow-xl hover:shadow-blue-50/50 group">
+                                                        <div key={pIdx} className="p-5 bg-white border border-slate-200 rounded-2xl hover:border-indigo-300 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-50/50 group">
                                                             <div className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2">{part.title}</div>
                                                             <div className="flex items-center gap-2 mb-2">
-                                                                <code className="text-blue-600 font-black text-sm bg-blue-50/50 px-2 py-0.5 rounded">{part.token}</code>
-                                                                <div className="h-2 w-2 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                                                <code className="text-indigo-600 font-black text-sm bg-indigo-50/50 px-2 py-0.5 rounded">{part.token}</code>
+                                                                <div className="h-2 w-2 rounded-full bg-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                                             </div>
                                                             <p className="text-[12px] text-slate-500 m-0 font-semibold leading-normal">{part.description}</p>
                                                         </div>
@@ -285,14 +244,14 @@ export const LessonPage: React.FC = () => {
                                                 <div className="grid grid-cols-1 gap-4 mb-8">
                                                     {item.steps.map((step, sIdx) => (
                                                         <div key={sIdx} className="flex gap-6 items-start p-6 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                                                            <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-blue-50 text-blue-600 font-black text-[11px] shrink-0">
+                                                            <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-indigo-50 text-indigo-600 font-black text-[11px] shrink-0">
                                                                 {sIdx + 1}
                                                             </div>
                                                             <div className="space-y-3 flex-grow">
                                                                 <div className="text-[15px] font-bold text-slate-900 tracking-tight">{step.title}</div>
                                                                 <div className="bg-slate-50 border border-slate-200 px-4 py-3 rounded-xl flex items-center justify-between group">
-                                                                    <code className="text-[13px] text-blue-600 font-bold">{step.command}</code>
-                                                                    <CodeOutlined className="text-slate-300 group-hover:text-blue-400 transition-colors" />
+                                                                    <code className="text-[13px] text-indigo-600 font-bold">{step.command}</code>
+                                                                    <CodeOutlined className="text-slate-300 group-hover:text-indigo-400 transition-colors" />
                                                                 </div>
                                                                 <p className="text-xs text-slate-500 font-medium leading-relaxed">{step.description}</p>
                                                             </div>
@@ -312,40 +271,7 @@ export const LessonPage: React.FC = () => {
                                         <h2 className="text-2xl font-bold text-slate-900 tracking-tight m-0">{lesson.comparison.title}</h2>
                                         <div className="h-[2px] flex-grow bg-slate-100"></div>
                                     </div>
-
-                                    <div className="bg-white border border-slate-200 rounded-[2rem] overflow-hidden shadow-2xl shadow-slate-200/50">
-                                        <div className="bg-slate-50/80 border-b border-slate-100 p-2 flex gap-2">
-                                            {lesson.comparison.examples.map((ex, exIdx) => (
-                                                <button
-                                                    key={exIdx}
-                                                    onClick={() => setActiveCompareTab(exIdx)}
-                                                    className={`px-6 py-2 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all ${activeCompareTab === exIdx
-                                                        ? 'bg-white text-blue-600 shadow-sm'
-                                                        : 'text-slate-400 hover:text-slate-600 hover:bg-white/50'
-                                                        }`}
-                                                >
-                                                    {ex.label}
-                                                </button>
-                                            ))}
-                                        </div>
-                                        <div className="p-8">
-                                            {lesson.comparison.examples.map((ex, exIdx) => (
-                                                <div key={exIdx} className={`${activeCompareTab === exIdx ? 'block' : 'hidden'} space-y-8 animate-in fade-in duration-500`}>
-                                                    <div className="flex gap-4 p-5 bg-blue-50/30 border border-blue-100/30 rounded-[1.5rem]">
-                                                        <ThunderboltFilled className="text-blue-500 mt-1" />
-                                                        <Text className="text-slate-700 text-base font-medium leading-relaxed">
-                                                            {ex.description}
-                                                        </Text>
-                                                    </div>
-                                                    <CodeBlock
-                                                        code={ex.code}
-                                                        language={ex.framework === 'react' ? 'jsx' : 'javascript'}
-                                                        title={`${ex.label} 實作`}
-                                                    />
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
+                                    {/* ... comparison logic ... */}
                                 </div>
                             )}
 
@@ -358,7 +284,6 @@ export const LessonPage: React.FC = () => {
                                             <Tag className="bg-emerald-100 text-emerald-600 border-none font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-tighter">即時程式測試</Tag>
                                             <div className="h-[2px] flex-grow bg-slate-100"></div>
                                         </div>
-                                        <p className="text-slate-500 font-medium">在瀏覽器直接測試你的 React 基礎，不需要任何開發環境。</p>
                                     </div>
                                     <div className="rounded-[2.5rem] overflow-hidden border-4 border-slate-50 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.08)] bg-white ring-1 ring-slate-200">
                                         <Playground initialCode={lesson.playground.initialCode} />
@@ -369,17 +294,15 @@ export const LessonPage: React.FC = () => {
 
                         {/* Bottom Action Footer */}
                         <div className="mt-20 pt-12 border-t-2 border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-8">
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    type="text"
-                                    disabled={!prevLesson}
-                                    icon={<ArrowLeftOutlined />}
-                                    className="h-14 px-8 rounded-2xl text-slate-400 font-black text-xs hover:bg-slate-50 uppercase tracking-widest disabled:opacity-30"
-                                    onClick={() => prevLesson && navigate(`/courses/react/lesson/${prevLesson.id}`)}
-                                >
-                                    上一單元
-                                </Button>
-                            </div>
+                            <Button
+                                type="text"
+                                disabled={!prevLesson}
+                                icon={<ArrowLeftOutlined />}
+                                className="h-14 px-8 rounded-2xl text-slate-400 font-black text-xs hover:bg-slate-50 uppercase tracking-widest disabled:opacity-30"
+                                onClick={() => prevLesson && navigate(`/courses/docker/lesson/${prevLesson.id}`)}
+                            >
+                                上一單元
+                            </Button>
 
                             <Button
                                 type="primary"
@@ -388,12 +311,12 @@ export const LessonPage: React.FC = () => {
                                 onClick={() => {
                                     if (lesson) {
                                         completeLesson(lesson.id);
-                                        message.success('已完成此單元！繼續前進吧！');
+                                        message.success('已完成此單元！');
                                     }
                                 }}
                                 className={`h-16 px-12 rounded-[1.5rem] border-none font-black text-sm transition-all hover:-translate-y-1 active:scale-95 uppercase tracking-widest ${isCompleted
                                     ? 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-100'
-                                    : 'bg-blue-600 hover:bg-blue-700 shadow-blue-200'
+                                    : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200'
                                     } shadow-xl`}
                             >
                                 {isCompleted ? '單元已完成' : '標記為已完成'}
@@ -406,44 +329,37 @@ export const LessonPage: React.FC = () => {
                                     icon={(!isCompleted && nextLesson && user?.role !== 'admin') ? <LockOutlined /> : <ArrowRightOutlined />}
                                     iconPosition="end"
                                     className={`h-14 px-8 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-30 ${
-                                        (!isCompleted && nextLesson && user?.role !== 'admin') ? 'text-slate-300' : 'text-blue-600 hover:bg-blue-50'
+                                        (!isCompleted && nextLesson && user?.role !== 'admin') ? 'text-slate-300' : 'text-indigo-600 hover:bg-indigo-50'
                                     }`}
-                                    onClick={() => nextLesson && navigate(`/courses/react/lesson/${nextLesson.id}`)}
+                                    onClick={() => nextLesson && navigate(`/courses/docker/lesson/${nextLesson.id}`)}
                                 >
                                     {(!isCompleted && nextLesson && user?.role !== 'admin') ? '單元鎖定中' : '下一單元'}
                                 </Button>
                             </Tooltip>
                         </div>
-                        {/* Previous & Next Lesson Context */}
+
                         <div className="mt-20 pt-10 border-t border-slate-100">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
                                     <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">上一課回顧</div>
                                     <div className="text-sm font-bold text-slate-700">{lesson.prevLesson || "無"}</div>
                                 </div>
-                                <div className="p-6 bg-blue-50/30 rounded-2xl border border-blue-100/50">
-                                    <div className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-2">下一課預告</div>
-                                    <div className="text-sm font-bold text-blue-800">{lesson.nextLesson || "即將推出"}</div>
+                                <div className="p-6 bg-indigo-50/30 rounded-2xl border border-indigo-100/50">
+                                    <div className="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-2">下一課預告</div>
+                                    <div className="text-sm font-bold text-indigo-800">{lesson.nextLesson || "即將推出"}</div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Q&A Section */}
                         <CommentSection lessonId={lesson.id} />
                     </div>
 
                     {/* Right Info Sidebar */}
                     <aside className="lg:col-span-4 space-y-6">
                         <div className="sticky top-32 space-y-8">
-                            {/* Modern TOC Card */}
                             <div className="bg-white border-2 border-slate-50 rounded-[2rem] p-8 shadow-sm">
                                 <div className="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em] mb-6 pb-4 border-b border-slate-50 flex justify-between items-center">
                                     <span>單元導覽導軌</span>
-                                    <div className="flex gap-1">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
-                                        <div className="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
-                                        <div className="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
-                                    </div>
                                 </div>
 
                                 <nav className="space-y-1">
@@ -451,60 +367,44 @@ export const LessonPage: React.FC = () => {
                                         <button
                                             key={s.id}
                                             onClick={() => scrollToSection(idx)}
-                                            className={`w-full group text-left p-4 rounded-2xl transition-all duration-300 flex items-center justify-between ${activeSection === idx ? 'bg-blue-50/50' : 'hover:bg-slate-50/50'
+                                            className={`w-full group text-left p-4 rounded-2xl transition-all duration-300 flex items-center justify-between ${activeSection === idx ? 'bg-indigo-50/50' : 'hover:bg-slate-50/50'
                                                 }`}
                                         >
                                             <div className="flex flex-col gap-0.5">
-                                                <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${activeSection === idx ? 'text-blue-400' : 'text-slate-300'
+                                                <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${activeSection === idx ? 'text-indigo-400' : 'text-slate-300'
                                                     }`}>
                                                     {s.label}
                                                 </span>
-                                                <span className={`text-[14px] font-bold transition-colors ${activeSection === idx ? 'text-blue-600' : 'text-slate-900'
+                                                <span className={`text-[14px] font-bold transition-colors ${activeSection === idx ? 'text-indigo-600' : 'text-slate-900'
                                                     }`}>
                                                     {s.title}
                                                 </span>
                                             </div>
-                                            <div className={`w-2 h-2 rounded-full transition-all duration-500 ${activeSection === idx ? 'bg-blue-600 scale-125 shadow-lg shadow-blue-200' : 'bg-slate-100 group-hover:bg-slate-200'
+                                            <div className={`w-2 h-2 rounded-full transition-all duration-500 ${activeSection === idx ? 'bg-indigo-600 scale-125 shadow-lg shadow-indigo-200' : 'bg-slate-100 group-hover:bg-slate-200'
                                                 }`}></div>
                                         </button>
                                     ))}
                                 </nav>
                             </div>
 
-                            {/* Pro Tip Tooltip-style Card */}
-                            <div className="relative group">
-                                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-[2rem] opacity-0 group-hover:opacity-10 transition duration-1000"></div>
-                                <div className="relative bg-white border border-slate-100 rounded-[2rem] p-8 space-y-6">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-500">
-                                            <ThunderboltFilled style={{ fontSize: '20px' }} />
-                                        </div>
-                                        <div>
-                                            <div className="text-[10px] font-black text-amber-600 uppercase tracking-widest">課程設計者提示</div>
-                                            <div className="text-sm font-black text-slate-900">思考模式</div>
-                                        </div>
+                            <div className="relative bg-white border border-slate-100 rounded-[2rem] p-8 space-y-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-500">
+                                        <ThunderboltFilled style={{ fontSize: '20px' }} />
                                     </div>
-                                    <p className="text-slate-500 text-[13px] leading-relaxed font-semibold m-0">
-                                        「React 的學習重點並不在於記住語法，而在於理解資料流與元件生命週期的互動關係。一旦掌握這個邏輯，任何前端框架對你來說都只是語法的不同而已。」
-                                    </p>
+                                    <div>
+                                        <div className="text-[10px] font-black text-amber-600 uppercase tracking-widest">課程設計者提示</div>
+                                        <div className="text-sm font-black text-slate-900">核心思維</div>
+                                    </div>
                                 </div>
-                            </div>
-
-                            {/* Minimal Support Widget */}
-                            <div className="px-8 space-y-3">
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">課程設計者</span>
-                                    <div className="text-[13px] font-bold text-slate-700">技術架構部 / 前端研發小組 / 黃冠禎</div>
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-400">技術支援信箱</span>
-                                    <a href="mailto:qscftyjm1234@gmail.com" className="text-blue-600 text-[13px] font-bold hover:underline transition-all">qscftyjm1234@gmail.com</a>
-                                </div>
+                                <p className="text-slate-500 text-[13px] leading-relaxed font-semibold m-0">
+                                    「環境的一致性是所有大型應用的開發基礎。掌握了 Docker，你就掌握了掌控雲端世界的遙控器。」
+                                </p>
                             </div>
                         </div>
                     </aside>
                 </div>
-            </main >
-        </div >
+            </main>
+        </div>
     );
 };

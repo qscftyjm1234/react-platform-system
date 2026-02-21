@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Types
+// 類型定義
 export type UserRole = 'admin' | 'employee';
 
 export interface User {
@@ -13,8 +13,8 @@ export interface User {
 interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
-    completedLessons: string[]; // Array of Lesson IDs e.g. "react-1"
-    login: (role: UserRole) => void;
+    completedLessons: string[]; // 已完成課程 ID 陣列，例如 "react-1"
+    login: (id: string) => void;
     logout: () => void;
     completeLesson: (lessonId: string) => void;
     isLessonUnlocked: (lessonId: string, previousLessonId?: string) => boolean;
@@ -22,17 +22,17 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock Users
-const MOCK_USERS: Record<UserRole, User> = {
+// 模擬使用者數據
+const MOCK_USERS: Record<string, User> = {
     admin: {
         id: 'u-admin',
         name: '系統管理員',
         role: 'admin',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'
     },
-    employee: {
-        id: 'u-employee',
-        name: '新進員工',
+    A1: {
+        id: 'u-employee-a1',
+        name: '學員 A1',
         role: 'employee',
         avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka'
     }
@@ -42,16 +42,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<User | null>(null);
     const [completedLessons, setCompletedLessons] = useState<string[]>([]);
 
-    // Init from localStorage
+    // 從 localStorage 初始化
     useEffect(() => {
         const storedUser = localStorage.getItem('app_user');
         const storedProgress = localStorage.getItem('app_progress');
 
         if (storedUser) {
             setUser(JSON.parse(storedUser));
-        } else {
-            // Default to admin for first time experience convenience, or null
-            login('admin');
         }
 
         if (storedProgress) {
@@ -59,14 +56,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, []);
 
-    const login = (role: UserRole) => {
-        const newUser = MOCK_USERS[role];
-        setUser(newUser);
-        localStorage.setItem('app_user', JSON.stringify(newUser));
-
-        // Reset progress on role switch simply for demo purposes? 
-        // Or keep it separate. For now, let's keep progress shared or reset if needed.
-        // Let's NOT reset progress automatically to allow testing.
+    const login = (id: string) => {
+        const newUser = MOCK_USERS[id];
+        if (newUser) {
+            setUser(newUser);
+            localStorage.setItem('app_user', JSON.stringify(newUser));
+        }
     };
 
     const logout = () => {
@@ -83,13 +78,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const isLessonUnlocked = (_lessonId: string, previousLessonId?: string): boolean => {
-        // 1. Admin always has access
+        // 1. 管理員永遠擁有存取權限
         if (user?.role === 'admin') return true;
 
-        // 2. If it's the very first lesson (no previous lesson), it's always unlocked
+        // 2. 如果是第一門課程（無前置課程），永遠保持解鎖狀態
         if (!previousLessonId) return true;
 
-        // 3. If previous lesson is completed, this one is unlocked
+        // 3. 如果前置課程已完成，則解鎖此課程
         return completedLessons.includes(previousLessonId);
     };
 

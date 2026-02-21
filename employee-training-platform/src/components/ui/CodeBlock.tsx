@@ -32,7 +32,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-[1.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition duration-1000"></div>
 
             <div className="relative rounded-[1.25rem] overflow-hidden border border-slate-800/50 bg-[#0B0E14]/90 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] ring-1 ring-white/5">
-                {/* Modern Window Header */}
+                {/* 現代化視窗標題列 */}
                 <div className="flex justify-between items-center px-5 py-3.5 bg-white/[0.03] border-b border-white/5">
                     <div className="flex items-center gap-4">
                         <div className="flex gap-2">
@@ -55,7 +55,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
                         </div>
                     </div>
 
-                    <Tooltip title="Copy to clipboard">
+                    <Tooltip title="複製程式碼">
                         <Button
                             type="text"
                             size="small"
@@ -63,7 +63,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
                             onClick={handleCopy}
                             className="bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 border-none transition-all duration-300 rounded-lg h-8 px-3 flex items-center gap-2"
                         >
-                            <span className="text-[10px] font-bold uppercase tracking-wider">Copy</span>
+                            <span className="text-[10px] font-bold uppercase tracking-wider">複製</span>
                         </Button>
                     </Tooltip>
                 </div>

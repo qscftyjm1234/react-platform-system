@@ -53,7 +53,7 @@ export interface LessonContent {
 
 export const reactLessons: LessonContent[] = [
   {
-    id: "1",
+    id: "react-1",
     title: "Lesson 1: 起源 - 安裝 Node.js 與 npm 環境",
     description: "在寫任何 React 程式之前，你必須先在電腦裝上「電力系統」。這節課我們只做一件事：搞定環境。",
     prevLesson: "無（這是首篇單元）",
@@ -95,7 +95,7 @@ export const reactLessons: LessonContent[] = [
     ]
   },
   {
-    id: "2",
+    id: "react-2",
     title: "Lesson 2: 哲學 - 為什麼要用 React 開發？",
     description: "傳統網頁是一次性的手動建築，而 React 是一套自動化的生產體系。了解資料驅動與組件化，你才能掌握現代開發的核心。",
     prevLesson: "Lesson 1: 環境安裝",
@@ -153,7 +153,7 @@ export const reactLessons: LessonContent[] = [
     }
   },
   {
-    id: "3",
+    id: "react-3",
     title: "Lesson 3: 建構 - 如何搭建您的第一個 React 專案",
     description: "工欲善其事，必先利其器。這節課我們將使用 Vite 建立專案，並深入認識 Vite 幫我們準備好的資料夾結構。",
     prevLesson: "Lesson 2: React 哲學",
@@ -205,7 +205,7 @@ export const reactLessons: LessonContent[] = [
     ]
   },
   {
-    id: "4",
+    id: "react-4",
     title: "Lesson 4: 啟動 - React 基本語法與元件入門",
     description: "地基打好後，現在正式點火啟動！這單元是您進入 React 程式開發的第一站，我們將學習如何用元件思考並寫下第一行 JSX。",
     prevLesson: "Lesson 3: 專案建立",
@@ -297,7 +297,7 @@ export default function App() {
     }
   },
   {
-    id: "5",
+    id: "react-5",
     title: "Lesson 5: 狀態 - useState 與「畫面的開關」",
     description: "在 Vue 裡您用 ref()，在 React 我們用 useState。它是告訴 React「資料變了，請重新畫圖」的唯一訊號燈。",
     prevLesson: "Lesson 4: JSX 與元件基礎",
@@ -361,7 +361,7 @@ export default function App() {
     }
   },
   {
-    id: "6",
+    id: "react-6",
     title: "Lesson 6: 通訊 - Props 與組件間的「包裹傳遞」",
     description: "學習讓元件之間對話。父母元件可以把資料包裝好，傳遞給小孩元件使用，實現組件的高度重複利用性。",
     prevLesson: "Lesson 5: useState 狀態",
@@ -460,7 +460,7 @@ export default function App() {
     }
   },
   {
-    id: "7",
+    id: "react-7",
     title: "Lesson 7: 循環 - 渲染列表與 Key 的秘密",
     description: "在 Vue 你用 v-for，在 React 我們用 JavaScript 的 .map()。學會如何高效地顯示一整串數據。",
     prevLesson: "Lesson 6: Props 傳遞",
@@ -539,7 +539,7 @@ export default function App() {
     }
   },
   {
-    id: "8",
+    id: "react-8",
     title: "Lesson 8: 參照 - useRef 與表單處理",
     description: "學會如何直接抓取 DOM 元素，以及如何處理受控與非受控元件。這在處理 Input 或第三方外掛時至關重要。",
     prevLesson: "Lesson 7: 列表渲染",
@@ -620,7 +620,7 @@ export default function App() {
     }
   },
   {
-    id: "9",
+    id: "react-9",
     title: "Lesson 9: 副作用 - useEffect 與「現實世界的連結」",
     description: "處理元件生命中的各種事件。例如：網頁剛載入時去網路抓資料，或者資料變動時做個紀錄。",
     prevLesson: "Lesson 8: useRef 參照",
@@ -698,7 +698,7 @@ export default function App() {
     }
   },
   {
-    id: "10",
+    id: "react-10",
     title: "Lesson 10: 導覽 - React Router 與單頁應用 (SPA)",
     description: "讓你的 Web App 擁有多個頁面。學習如何在不重新整理瀏覽器的情況下，實現極速的頁面跳轉。",
     prevLesson: "Lesson 9: useEffect 副作用",
@@ -765,7 +765,7 @@ export default function App() {
     }
   },
   {
-    id: "11",
+    id: "react-11",
     title: "Lesson 11: 管理 - Context API 與全域廣播系統",
     description: "擺脫層層傳遞的麻煩。學習如何建立一個全區都聽得到的廣播，讓任何角落的元件都能直接抓到資料。",
     prevLesson: "Lesson 10: React Router",
@@ -837,7 +837,7 @@ export default function App() {
     }
   },
   {
-    id: "12",
+    id: "react-12",
     title: "Lesson 12: 效能 - memo, useMemo 與 useCallback",
     description: "學會 React 的效能三兄弟。在開發超大型應用程式時，你必須學會如何精準地節省運算資源。",
     prevLesson: "Lesson 11: Context API",

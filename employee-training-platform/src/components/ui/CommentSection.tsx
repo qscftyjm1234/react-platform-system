@@ -11,7 +11,7 @@ interface Comment {
     userRole: string;
     content: string;
     timestamp: number;
-    parentId?: string; // Support for replies
+    parentId?: string; // 支援回覆功能
 }
 
 interface CommentSectionProps {
@@ -23,13 +23,13 @@ export const CommentSection: React.FC<CommentSectionProps> = ({ lessonId }) => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [inputValue, setInputValue] = useState('');
 
-    // States for editing and replying
+    // 用於編輯與回覆的狀態
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editValue, setEditValue] = useState('');
     const [replyingToId, setReplyingToId] = useState<string | null>(null);
     const [replyValue, setReplyValue] = useState('');
 
-    // Load comments from localStorage
+    // 從 localStorage 載入留言
     useEffect(() => {
         const stored = localStorage.getItem(`lesson_comments_${lessonId}`);
         if (stored) {
@@ -158,7 +158,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({ lessonId }) => {
                             </div>
                         )}
 
-                        {/* Action Buttons */}
+                        {/* 動作按鈕 */}
                         {!isEditing && user && (
                             <div className="flex gap-4 mt-3 transition-opacity">
                                 <Button
@@ -199,7 +199,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({ lessonId }) => {
                     </div>
                 </div>
 
-                {/* Reply Input Area */}
+                {/* 回覆輸入區域 */}
                 {isReplying && (
                     <div className="ml-12 mt-3 p-4 bg-blue-50/30 rounded-2xl border border-blue-100/50 animate-in slide-in-from-top-2 duration-300">
                         <Input.TextArea
@@ -216,7 +216,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({ lessonId }) => {
                     </div>
                 )}
 
-                {/* Recursive Replies Rendering */}
+                {/* 遞迴渲染回覆留言 */}
                 {comments.filter((c: Comment) => c.parentId === item.id).map((reply: Comment) => renderCommentItem(reply, true))}
             </div>
         );
