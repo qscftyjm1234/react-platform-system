@@ -22,7 +22,8 @@ import { CommentSection } from '@/components/ui/CommentSection';
 const { Title, Text } = Typography;
 
 export const AILessonPage: React.FC = () => {
-    const { lessonId } = useParams();
+    const params = useParams();
+    const lessonId = params.lessonId || '';
     const navigate = useNavigate();
     const { user, completeLesson, completedLessons, isLessonUnlocked } = useAuth();
     const [scrolled, setScrolled] = React.useState(false);
@@ -148,9 +149,7 @@ export const AILessonPage: React.FC = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     <div className="lg:col-span-8">
                         <div className="mb-12 space-y-4">
-                            <Tag className="bg-emerald-600 border-none text-white font-black px-3 py-0.5 rounded-full m-0 text-[10px] tracking-[0.2em] uppercase shadow-lg shadow-emerald-100">
-                                AI 課程 {lessonId?.replace('ai-', '')}
-                            </Tag>
+                            AI 課程 {lessonId.replace('ai-', '')}
                             <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight leading-[1.2]">
                                 {lesson.title}
                             </h1>
