@@ -1,10 +1,10 @@
 import React from 'react';
 import { KPICard } from '../components/dashboard/KPICard';
 import { ActivityFeed } from '../components/dashboard/ActivityFeed';
-import { 
-    BookOutlined, 
-    PlayCircleOutlined, 
-    CheckCircleOutlined, 
+import {
+    BookOutlined,
+    PlayCircleOutlined,
+    CheckCircleOutlined,
     TrophyOutlined,
     RightOutlined,
     ClockCircleOutlined,
@@ -12,6 +12,7 @@ import {
     LockOutlined
 } from '@ant-design/icons';
 import { Typography, Button, Tag, Progress } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 import { COURSES } from '@/data/courses';
@@ -22,6 +23,7 @@ import { aiLessons } from '@/data/aiLessons';
 const { Title, Text } = Typography;
 
 export const Dashboard: React.FC = () => {
+    const navigate = useNavigate();
     const { user, completedLessons } = useAuth();
     const [notStartedFilter, setNotStartedFilter] = React.useState<'all' | 'required' | 'elective'>('all');
     const [inProgressFilter, setInProgressFilter] = React.useState<'all' | 'required' | 'elective'>('all');
@@ -37,7 +39,7 @@ export const Dashboard: React.FC = () => {
             const total = lessons.length;
             const completed = lessons.filter(l => completedLessons.includes(l.id)).length;
             const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
-            
+
             return {
                 ...course,
                 progress,
@@ -52,11 +54,11 @@ export const Dashboard: React.FC = () => {
     const completedCourses = coursesWithProgress.filter(c => c.progress === 100);
     const notStartedCourses = coursesWithProgress.filter(c => c.progress === 0);
 
-    const filteredInProgress = inProgressCourses.filter(course => 
+    const filteredInProgress = inProgressCourses.filter(course =>
         inProgressFilter === 'all' || course.type === inProgressFilter
     );
 
-    const filteredNotStarted = notStartedCourses.filter(course => 
+    const filteredNotStarted = notStartedCourses.filter(course =>
         notStartedFilter === 'all' || course.type === notStartedFilter
     );
 
@@ -67,7 +69,7 @@ export const Dashboard: React.FC = () => {
     const mandatoryTotalProgress = coursesWithProgress
         .filter(c => c.type === 'required')
         .reduce((acc, c) => acc + c.progress, 0) / (coursesWithProgress.filter(c => c.type === 'required').length || 1);
-    
+
     const electiveTotalProgress = coursesWithProgress
         .filter(c => c.type === 'elective')
         .reduce((acc, c) => acc + c.progress, 0) / (coursesWithProgress.filter(c => c.type === 'elective').length || 1);
@@ -93,7 +95,7 @@ export const Dashboard: React.FC = () => {
                             </Button>
                         </div>
                     </div>
-                    
+
                     {/* 進度摘要卡片 */}
                     <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 w-full lg:w-80 shadow-inner">
                         <Text className="text-blue-100 text-xs font-bold uppercase tracking-widest mb-4 block">個人學習進度</Text>
@@ -115,7 +117,7 @@ export const Dashboard: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                
+
                 {/* 裝飾性元素 */}
                 <div className="absolute top-[-20%] right-[-10%] w-96 h-96 bg-blue-500 rounded-full blur-[100px] opacity-30" />
                 <div className="absolute bottom-[-20%] left-[20%] w-64 h-64 bg-indigo-500 rounded-full blur-[80px] opacity-20" />
@@ -161,7 +163,7 @@ export const Dashboard: React.FC = () => {
                                 </div>
                                 <Title level={4} className="!mb-0">正在進行課程</Title>
                             </div>
-                            
+
                             <div className="flex bg-gray-50 p-1 rounded-xl w-fit">
                                 {[
                                     { label: '全部', value: 'all' },
@@ -171,11 +173,10 @@ export const Dashboard: React.FC = () => {
                                     <button
                                         key={tab.value}
                                         onClick={() => setInProgressFilter(tab.value as any)}
-                                        className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                            inProgressFilter === tab.value 
-                                            ? 'bg-white text-blue-600 shadow-sm' 
-                                            : 'text-gray-400 hover:text-gray-600'
-                                        }`}
+                                        className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${inProgressFilter === tab.value
+                                                ? 'bg-white text-blue-600 shadow-sm'
+                                                : 'text-gray-400 hover:text-gray-600'
+                                            }`}
                                     >
                                         {tab.label}
                                     </button>
@@ -186,14 +187,14 @@ export const Dashboard: React.FC = () => {
                                 全部課程 <RightOutlined className="text-xs group-hover:translate-x-1 transition-transform" />
                             </Button>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {filteredInProgress.length > 0 ? (
                                 filteredInProgress.map((course) => (
-                                    <div 
-                                        key={course.id} 
+                                    <div
+                                        key={course.id}
                                         className="group cursor-pointer bg-gray-50/50 hover:bg-white p-4 rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all"
-                                        onClick={() => window.location.href = course.path || '#'}
+                                        onClick={() => course.path && navigate(course.path)}
                                     >
                                         <div className="flex justify-between items-start mb-3">
                                             <div className="flex items-center gap-2">
@@ -215,7 +216,7 @@ export const Dashboard: React.FC = () => {
                                     </div>
                                 ))
                             ) : (
-                                    <div className="col-span-2 py-8 text-center bg-gray-50/30 rounded-xl border border-dashed border-gray-100">
+                                <div className="col-span-2 py-8 text-center bg-gray-50/30 rounded-xl border border-dashed border-gray-100">
                                     <Text className="text-gray-400 font-medium italic">
                                         {inProgressFilter === 'all' ? '目前沒有進行中的課程，快去下方挑選一門吧！' : `目前沒有進行中的「${inProgressFilter === 'required' ? '必修' : '選修'}」課程`}
                                     </Text>
@@ -226,14 +227,14 @@ export const Dashboard: React.FC = () => {
 
                     {/* 選修與必修課程列表區塊 */}
                     <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm overflow-hidden relative">
-                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
                                     <StarOutlined className="text-xl" />
                                 </div>
                                 <Title level={4} className="!mb-0">尚未開始的必修與選修課程</Title>
                             </div>
-                            
+
                             <div className="flex bg-gray-50 p-1 rounded-xl w-fit">
                                 {[
                                     { label: '全部', value: 'all' },
@@ -243,11 +244,10 @@ export const Dashboard: React.FC = () => {
                                     <button
                                         key={tab.value}
                                         onClick={() => setNotStartedFilter(tab.value as any)}
-                                        className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                            notStartedFilter === tab.value 
-                                            ? 'bg-white text-blue-600 shadow-sm' 
-                                            : 'text-gray-400 hover:text-gray-600'
-                                        }`}
+                                        className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${notStartedFilter === tab.value
+                                                ? 'bg-white text-blue-600 shadow-sm'
+                                                : 'text-gray-400 hover:text-gray-600'
+                                            }`}
                                     >
                                         {tab.label}
                                     </button>
@@ -258,7 +258,7 @@ export const Dashboard: React.FC = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {filteredNotStarted.length > 0 ? (
                                 filteredNotStarted.map((course) => (
-                                    <div 
+                                    <div
                                         key={course.id}
                                         className={`bg-gradient-to-br ${course.gradient} p-6 rounded-2xl border ${course.border} flex flex-col justify-between min-h-[160px] transition-all ${course.status === 'coming_soon' ? 'opacity-75 grayscale-[0.3]' : 'hover:shadow-md'} animate-in zoom-in-95 duration-500`}
                                     >
@@ -274,10 +274,10 @@ export const Dashboard: React.FC = () => {
                                             </div>
                                             <p className="text-gray-600/70 text-sm line-clamp-2">{course.description}</p>
                                         </div>
-                                        <Button 
+                                        <Button
                                             disabled={course.status === 'coming_soon'}
                                             className={`w-fit text-white border-none font-bold rounded-lg mt-4 ${course.status === 'coming_soon' ? 'bg-gray-300' : course.btn}`}
-                                            onClick={() => course.status !== 'coming_soon' && (window.location.href = course.path || '#')}
+                                            onClick={() => course.status !== 'coming_soon' && course.path && navigate(course.path)}
                                         >
                                             {course.status === 'coming_soon' ? '即將開放' : (course.type === 'required' ? '開始上課' : '了解看看!')}
                                         </Button>
