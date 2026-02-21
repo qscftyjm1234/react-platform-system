@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout, Menu, Button, Avatar, Badge, Dropdown, Tag } from 'antd';
+import { Layout, Menu, Button, Avatar, Badge, Dropdown, Tag, MenuProps } from 'antd';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import {
     MenuFoldOutlined,
@@ -52,7 +52,7 @@ export const MainLayout: React.FC = () => {
         navigate('/login');
     };
 
-    const userMenuItems = [
+    const userMenuItems: MenuProps['items'] = [
         {
             key: 'profile',
             label: '個人檔案',
@@ -110,10 +110,10 @@ export const MainLayout: React.FC = () => {
                             label: collapsed ? '' : '課程管理系統',
                             children: COURSES.map(course => ({
                                 key: course.id,
-                                icon: course.id === 'course-js' ? <BulbOutlined /> : 
-                                      course.id === 'course-react' ? <CodeOutlined /> :
-                                      course.id === 'course-docker' ? <ContainerOutlined /> :
-                                      <RobotOutlined />,
+                                icon: course.id === 'course-js' ? <BulbOutlined /> :
+                                    course.id === 'course-react' ? <CodeOutlined /> :
+                                        course.id === 'course-docker' ? <ContainerOutlined /> :
+                                            <RobotOutlined />,
                                 label: (
                                     <div className="flex items-center justify-between w-full">
                                         <span className="truncate mr-2">{course.title.split('：')[0]}</span>
@@ -167,7 +167,7 @@ export const MainLayout: React.FC = () => {
                         <Badge count={3} size="small" offset={[-2, 2]}>
                             <Button type="text" icon={<BellOutlined />} shape="circle" className="text-gray-500 hover:bg-gray-100" />
                         </Badge>
-                        
+
                         <Button
                             onClick={handleRoleSwitch}
                             icon={<SwapOutlined />}
@@ -177,7 +177,7 @@ export const MainLayout: React.FC = () => {
                         </Button>
 
                         <div className="h-6 w-[1px] bg-gray-200"></div>
-                        
+
                         <Dropdown menu={{ items: userMenuItems }} placement="bottomRight" arrow>
                             <div className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-1.5 rounded-full pr-4 transition-colors border border-transparent hover:border-gray-100">
                                 <Avatar size={36} src={user?.avatar} className="bg-blue-100" />

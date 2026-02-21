@@ -1,11 +1,10 @@
 import React from 'react';
 import { Avatar, List, Tag } from 'antd';
-import { 
-    MessageOutlined, 
-    PlayCircleOutlined, 
-    ClockCircleOutlined, 
+import {
+    MessageOutlined,
+    ClockCircleOutlined,
     BellOutlined,
-    NotificationOutlined 
+    NotificationOutlined
 } from '@ant-design/icons';
 
 type ActivityType = 'reply' | 'new_course' | 'achievement';
@@ -95,7 +94,7 @@ export const ActivityFeed: React.FC = () => {
                 </button>
             </div>
 
-            <List
+            <List<Activity>
                 itemLayout="horizontal"
                 dataSource={activities}
                 renderItem={(item) => (
