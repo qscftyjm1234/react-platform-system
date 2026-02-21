@@ -103,15 +103,19 @@ export const DockerLessonPage: React.FC = () => {
         }
     };
 
-    if (!lesson) {
+    if (!lesson || (!isUnlocked && user?.role !== 'admin')) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 animate-in fade-in zoom-in duration-500">
                 <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400">
-                    <InfoCircleOutlined style={{ fontSize: '24px' }} />
+                    <LockOutlined style={{ fontSize: '24px' }} />
                 </div>
                 <div className="text-center">
-                    <Title level={4} className="text-slate-900 m-0 mb-1">找不到該單元</Title>
-                    <Text className="text-slate-500 font-medium">請確認連結是否正確或返回課程列表</Text>
+                    <Title level={4} className="text-slate-900 m-0 mb-1">
+                        {!lesson ? '找不到該單元' : '單元尚未解鎖'}
+                    </Title>
+                    <Text className="text-slate-500 font-medium">
+                        {!lesson ? '請確認連結是否正確或返回課程列表' : `請先完成前一單元「${prevLesson?.title}」`}
+                    </Text>
                 </div>
                 <Button
                     type="primary"
@@ -328,9 +332,8 @@ export const DockerLessonPage: React.FC = () => {
                                     disabled={!nextLesson || (!isCompleted && user?.role !== 'admin')}
                                     icon={(!isCompleted && nextLesson && user?.role !== 'admin') ? <LockOutlined /> : <ArrowRightOutlined />}
                                     iconPosition="end"
-                                    className={`h-14 px-8 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-30 ${
-                                        (!isCompleted && nextLesson && user?.role !== 'admin') ? 'text-slate-300' : 'text-indigo-600 hover:bg-indigo-50'
-                                    }`}
+                                    className={`h-14 px-8 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-30 ${(!isCompleted && nextLesson && user?.role !== 'admin') ? 'text-slate-300' : 'text-indigo-600 hover:bg-indigo-50'
+                                        }`}
                                     onClick={() => nextLesson && navigate(`/courses/docker/lesson/${nextLesson.id}`)}
                                 >
                                     {(!isCompleted && nextLesson && user?.role !== 'admin') ? '單元鎖定中' : '下一單元'}

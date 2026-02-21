@@ -86,19 +86,19 @@ export const AILessonPage: React.FC = () => {
                     請先完成前一單元「<span className="text-emerald-600">{prevLesson?.title}</span>」，方可進入此單元。
                 </p>
                 <div className="flex justify-center gap-4">
-                    <Button 
-                        size="large" 
-                        shape="round" 
-                        icon={<ArrowLeftOutlined />} 
+                    <Button
+                        size="large"
+                        shape="round"
+                        icon={<ArrowLeftOutlined />}
                         onClick={() => navigate('/courses/ai')}
                         className="h-14 px-8 font-bold border-slate-200 text-slate-600"
                     >
                         返回課程清單
                     </Button>
-                    <Button 
-                        type="primary" 
-                        size="large" 
-                        shape="round" 
+                    <Button
+                        type="primary"
+                        size="large"
+                        shape="round"
                         onClick={() => prevLesson && navigate(`/courses/ai/lesson/${prevLesson.id}`)}
                         className="h-14 px-8 font-black bg-emerald-600 border-none shadow-lg shadow-emerald-100"
                     >
@@ -149,7 +149,7 @@ export const AILessonPage: React.FC = () => {
                     <div className="lg:col-span-8">
                         <div className="mb-12 space-y-4">
                             <Tag className="bg-emerald-600 border-none text-white font-black px-3 py-0.5 rounded-full m-0 text-[10px] tracking-[0.2em] uppercase shadow-lg shadow-emerald-100">
-                                AI 課程 {lessonId.replace('ai-', '')}
+                                AI 課程 {lessonId?.replace('ai-', '')}
                             </Tag>
                             <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight leading-[1.2]">
                                 {lesson.title}
@@ -260,9 +260,8 @@ export const AILessonPage: React.FC = () => {
                                     disabled={!nextLesson || (!isCompleted && user?.role !== 'admin')}
                                     icon={(!isCompleted && nextLesson && user?.role !== 'admin') ? <LockOutlined /> : <ArrowRightOutlined />}
                                     iconPosition="end"
-                                    className={`h-14 px-8 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-30 ${
-                                        (!isCompleted && nextLesson && user?.role !== 'admin') ? 'text-slate-300' : 'text-emerald-600 hover:bg-emerald-50'
-                                    }`}
+                                    className={`h-14 px-8 rounded-2xl font-black text-xs uppercase tracking-widest disabled:opacity-30 ${(!isCompleted && nextLesson && user?.role !== 'admin') ? 'text-slate-300' : 'text-emerald-600 hover:bg-emerald-50'
+                                        }`}
                                     onClick={() => nextLesson && navigate(`/courses/ai/lesson/${nextLesson.id}`)}
                                 >
                                     {(!isCompleted && nextLesson && user?.role !== 'admin') ? '單元鎖定中' : '下一單元'}
@@ -297,7 +296,7 @@ export const AILessonPage: React.FC = () => {
                     </div>
                 </div>
             </main>
-            
+
             <CommentSection lessonId={lesson.id} />
         </div>
     );
