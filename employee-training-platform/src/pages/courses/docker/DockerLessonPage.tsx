@@ -10,7 +10,6 @@ import {
     ThunderboltFilled,
     ShareAltOutlined,
     MoreOutlined,
-    InfoCircleOutlined,
     DownloadOutlined
 } from '@ant-design/icons';
 import { dockerLessons } from '@/data/dockerLessons';
