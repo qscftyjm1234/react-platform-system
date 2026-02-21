@@ -33,55 +33,11 @@ const { TabPane } = Tabs;
 const { Option } = Select;
 
 export const SystemSettings: React.FC = () => {
-    const [departments, setDepartments] = useState<Department[]>(INITIAL_DEPARTMENTS);
     const [rules] = useState<AssignmentRule[]>(INITIAL_ASSIGNMENT_RULES);
     const [groups, setGroups] = useState<CourseGroup[]>(COURSE_GROUPS);
-    const [isDeptModalVisible, setIsDeptModalVisible] = useState(false);
     const [isGroupModalVisible, setIsGroupModalVisible] = useState(false);
-    const [form] = Form.useForm();
     const [groupForm] = Form.useForm();
 
-    const handleAddDept = (values: any) => {
-        const newDept: Department = {
-            id: `D${departments.length + 1}`,
-            name: values.name,
-            employeeCount: 0
-        };
-        setDepartments([...departments, newDept]);
-        setIsDeptModalVisible(false);
-        form.resetFields();
-        message.success('已成功新增部門');
-    };
-
-    const deptColumns = [
-        {
-            title: '部門名稱',
-            dataIndex: 'name',
-            key: 'name',
-            render: (text: string) => <Text className="font-bold">{text}</Text>
-        },
-        {
-            title: '部門編號',
-            dataIndex: 'id',
-            key: 'id',
-        },
-        {
-            title: '當前人數',
-            dataIndex: 'employeeCount',
-            key: 'employeeCount',
-            render: (count: number) => <Tag color="blue">{count} 人</Tag>
-        },
-        {
-            title: '操作',
-            key: 'action',
-            render: () => (
-                <Space size="middle">
-                    <Button type="text" icon={<EditOutlined />} />
-                    <Button type="text" danger icon={<DeleteOutlined />} />
-                </Space>
-            ),
-        },
-    ];
 
     return (
         <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-700">
@@ -95,7 +51,7 @@ export const SystemSettings: React.FC = () => {
                         培訓策略設定
                     </Title>
                     <Text className="text-blue-100/80 text-lg lg:text-xl font-light leading-relaxed block">
-                        在這裡您可以管理組織架構，並定義基於 <span className="text-white font-bold underline decoration-blue-400 underline-offset-4">部門與角色</span> 的自動化學習路徑。
+                        定義組織單位與課程的映射關係。系統將根據 HR 同步的 <span className="text-white font-bold underline decoration-blue-400 underline-offset-4">部門與職等</span> 自動指派學習路徑。
                     </Text>
                 </div>
 
@@ -105,29 +61,7 @@ export const SystemSettings: React.FC = () => {
             </div>
 
             <Card className="shadow-sm border-none rounded-3xl" bodyStyle={{ padding: '0px' }}>
-                <Tabs defaultActiveKey="1" className="custom-settings-tabs" size="large">
-                    <TabPane
-                        tab={<span className="flex items-center gap-2 px-4 py-2"><TeamOutlined />部門管理</span>}
-                        key="1"
-                        className="p-8"
-                    >
-                        <div className="flex justify-between items-center mb-6">
-                            <div>
-                                <Title level={4} className="!mb-1">部門列表</Title>
-                                <Text type="secondary">定義公司內部的組織單位</Text>
-                            </div>
-                            <Button type="primary" icon={<PlusOutlined />} className="rounded-xl font-bold h-10 px-6 shadow-md" onClick={() => setIsDeptModalVisible(true)}>
-                                新增部門
-                            </Button>
-                        </div>
-                        <Table
-                            columns={deptColumns}
-                            dataSource={departments}
-                            rowKey="id"
-                            className="ant-table-custom"
-                            pagination={false}
-                        />
-                    </TabPane>
+                <Tabs defaultActiveKey="2" className="custom-settings-tabs" size="large">
 
                     <TabPane
                         tab={<span className="flex items-center gap-2 px-4 py-2"><SafetyCertificateOutlined />自動課程分配</span>}
@@ -264,31 +198,6 @@ export const SystemSettings: React.FC = () => {
                 </Tabs>
             </Card >
 
-            {/* 部門新增 Modal */}
-            < Modal
-                title={< span className="text-xl font-black" > 新增部門</span >}
-                visible={isDeptModalVisible}
-                onCancel={() => setIsDeptModalVisible(false)}
-                footer={null}
-                className="custom-modal"
-                centered
-            >
-                <Form form={form} layout="vertical" onFinish={handleAddDept}>
-                    <Form.Item
-                        name="name"
-                        label={<span className="font-bold">部門名稱</span>}
-                        rules={[{ required: true, message: '請輸入部門名稱' }]}
-                    >
-                        <Input placeholder="例如：法律事務部" className="h-10 rounded-lg" />
-                    </Form.Item>
-                    <Form.Item className="mb-0 text-right">
-                        <Space>
-                            <Button onClick={() => setIsDeptModalVisible(false)} className="rounded-lg">取消</Button>
-                            <Button type="primary" htmlType="submit" className="rounded-lg font-bold px-6">確認新增</Button>
-                        </Space>
-                    </Form.Item>
-                </Form>
-            </Modal >
         </div >
     );
 };
