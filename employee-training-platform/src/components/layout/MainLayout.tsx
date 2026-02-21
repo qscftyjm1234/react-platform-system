@@ -30,7 +30,7 @@ export const MainLayout: React.FC = () => {
     const { user, login, logout } = useAuth();
 
     const handleRoleSwitch = () => {
-        const nextUserId = user?.role === 'admin' ? 'A1' : 'u-admin';
+        const nextUserId = user?.role === 'admin' ? 'A1' : 'admin';
         login(nextUserId);
     };
 
