@@ -283,6 +283,10 @@ export const SystemSettings: React.FC = () => {
                                     <Option value="730">2 年</Option>
                                 </Select>
                             </div>
+
+                            <Button type="primary" size="large" className="rounded-xl font-bold px-10 h-12 shadow-lg mt-8" onClick={() => message.success('全局系統設定已儲存')}>
+                                儲存系統配置
+                            </Button>
                         </div>
                     </TabPane>
                 </Tabs>
@@ -317,11 +321,17 @@ export const SystemSettings: React.FC = () => {
                         label={<span className="font-bold">包含課程</span>}
                         rules={[{ required: true, message: '請至少選擇一門課程' }]}
                     >
-                        <Select mode="multiple" placeholder="選擇課程" className="w-full">
-                            {COURSES.map(course => (
-                                <Option key={course.id} value={course.id}>{course.title}</Option>
-                            ))}
-                        </Select>
+                        <Checkbox.Group className="w-full">
+                            <Row gutter={[16, 12]}>
+                                {COURSES.map(course => (
+                                    <Col span={12} key={course.id}>
+                                        <Checkbox value={course.id} className="text-sm">
+                                            {course.title.split('：')[0]}
+                                        </Checkbox>
+                                    </Col>
+                                ))}
+                            </Row>
+                        </Checkbox.Group>
                     </Form.Item>
                 </Form>
             </Modal>
@@ -360,21 +370,29 @@ export const SystemSettings: React.FC = () => {
                         name="groupIds"
                         label={<span className="font-bold">關聯課程群組</span>}
                     >
-                        <Select mode="multiple" placeholder="選擇要指派的群組" className="w-full">
-                            {groups.map(group => (
-                                <Option key={group.id} value={group.id}>{group.name}</Option>
-                            ))}
-                        </Select>
+                        <Checkbox.Group className="w-full">
+                            <Row gutter={[16, 8]}>
+                                {groups.map(group => (
+                                    <Col span={12} key={group.id}>
+                                        <Checkbox value={group.id}>{group.name}</Checkbox>
+                                    </Col>
+                                ))}
+                            </Row>
+                        </Checkbox.Group>
                     </Form.Item>
                     <Form.Item
                         name="courseIds"
                         label={<span className="font-bold">單獨指派課程 (非選)</span>}
                     >
-                        <Select mode="multiple" placeholder="加選個別課程" className="w-full">
-                            {COURSES.map(course => (
-                                <Option key={course.id} value={course.id}>{course.title}</Option>
-                            ))}
-                        </Select>
+                        <Checkbox.Group className="w-full">
+                            <Row gutter={[16, 8]}>
+                                {COURSES.map(course => (
+                                    <Col span={12} key={course.id}>
+                                        <Checkbox value={course.id}>{course.title.split('：')[0]}</Checkbox>
+                                    </Col>
+                                ))}
+                            </Row>
+                        </Checkbox.Group>
                     </Form.Item>
                 </Form>
             </Modal>
