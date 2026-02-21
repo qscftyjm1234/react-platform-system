@@ -25,8 +25,8 @@ import {
     SettingOutlined,
     SafetyCertificateOutlined
 } from '@ant-design/icons';
-import { INITIAL_DEPARTMENTS, INITIAL_ASSIGNMENT_RULES, Department, AssignmentRule } from '@/data/settings';
-import { COURSES } from '@/data/courses';
+import { INITIAL_DEPARTMENTS, INITIAL_ASSIGNMENT_RULES, Department, AssignmentRule, CourseGroup } from '@/data/settings';
+import { COURSES, COURSE_GROUPS } from '@/data/courses';
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
@@ -35,8 +35,11 @@ const { Option } = Select;
 export const SystemSettings: React.FC = () => {
     const [departments, setDepartments] = useState<Department[]>(INITIAL_DEPARTMENTS);
     const [rules] = useState<AssignmentRule[]>(INITIAL_ASSIGNMENT_RULES);
+    const [groups, setGroups] = useState<CourseGroup[]>(COURSE_GROUPS);
     const [isDeptModalVisible, setIsDeptModalVisible] = useState(false);
+    const [isGroupModalVisible, setIsGroupModalVisible] = useState(false);
     const [form] = Form.useForm();
+    const [groupForm] = Form.useForm();
 
     const handleAddDept = (values: any) => {
         const newDept: Department = {
@@ -150,14 +153,19 @@ export const SystemSettings: React.FC = () => {
                                         </Col>
                                         <Col span={14}>
                                             <div className="flex flex-wrap gap-2">
-                                                {COURSES.map(course => {
-                                                    const isChecked = rule.courseIds.includes(course.id);
+                                                {rule.courseIds.map(courseId => {
+                                                    const course = COURSES.find(c => c.id === courseId);
                                                     return (
-                                                        <Tag
-                                                            key={course.id}
-                                                            className={`rounded-lg cursor-pointer transition-all border-none py-1 px-3 ${isChecked ? 'bg-blue-600 text-white shadow-sm' : 'bg-gray-200 text-gray-500 opacity-60'}`}
-                                                        >
-                                                            {course.title.split('：')[0]}
+                                                        <Tag key={courseId} className="rounded-lg bg-blue-600 text-white border-none py-1 px-3">
+                                                            {course?.title.split('：')[0]}
+                                                        </Tag>
+                                                    );
+                                                })}
+                                                {rule.groupIds?.map(groupId => {
+                                                    const group = groups.find(g => g.id === groupId);
+                                                    return (
+                                                        <Tag key={groupId} className="rounded-lg bg-emerald-600 text-white border-none py-1 px-3">
+                                                            [組] {group?.name}
                                                         </Tag>
                                                     );
                                                 })}
@@ -171,6 +179,17 @@ export const SystemSettings: React.FC = () => {
                                 </Card>
                             ))}
 
+                            <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100/50 flex items-start gap-4">
+                                <SafetyCertificateOutlined className="text-blue-600 text-xl mt-1" />
+                                <div>
+                                    <Text className="font-bold text-blue-900 block mb-1">自動分配邏輯</Text>
+                                    <Text type="secondary" className="text-sm">
+                                        當新員工匯入時，系統會自動根據其「部門」或「職稱」比對上方規則。
+                                        符合規則的員工將會自動被指派對應的課程與課程群組。
+                                    </Text>
+                                </div>
+                            </div>
+
                             <Button type="dashed" block icon={<PlusOutlined />} className="h-16 rounded-2xl text-gray-400 font-bold border-2">
                                 新增分配規則
                             </Button>
@@ -178,8 +197,48 @@ export const SystemSettings: React.FC = () => {
                     </TabPane>
 
                     <TabPane
-                        tab={<span className="flex items-center gap-2 px-4 py-2"><SettingOutlined />通用參數</span>}
+                        tab={<span className="flex items-center gap-2 px-4 py-2"><SettingOutlined />課程群組管理</span>}
                         key="3"
+                        className="p-8"
+                    >
+                        <div className="flex justify-between items-center mb-8">
+                            <div>
+                                <Title level={4} className="!mb-1">學習路徑 (Learning Paths)</Title>
+                                <Text type="secondary">定義課程群組，簡化大規模課程分配</Text>
+                            </div>
+                            <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsGroupModalVisible(true)} className="rounded-xl font-bold h-10 px-6 shadow-md">
+                                建立新群組
+                            </Button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {groups.map(group => (
+                                <Card key={group.id} className="rounded-2xl border-gray-100 hover:shadow-lg transition-all duration-300">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <Title level={5} className="!m-0 !font-black !text-gray-800">{group.name}</Title>
+                                        <Space>
+                                            <Button type="text" size="small" icon={<EditOutlined />} />
+                                            <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+                                        </Space>
+                                    </div>
+                                    <p className="text-gray-500 mb-6 text-sm line-clamp-2">{group.description}</p>
+                                    <div className="space-y-3">
+                                        <div className="text-[10px] font-black uppercase text-gray-400 tracking-widest">包含課程 ({group.courseIds.length})</div>
+                                        <div className="flex flex-wrap gap-1">
+                                            {group.courseIds.map(cid => {
+                                                const course = COURSES.find(c => c.id === cid);
+                                                return <Tag key={cid} className="m-0 border-gray-100 bg-gray-50 text-gray-500 text-[11px] py-0">{course?.title.split('：')[0]}</Tag>;
+                                            })}
+                                        </div>
+                                    </div>
+                                </Card>
+                            ))}
+                        </div>
+                    </TabPane>
+
+                    <TabPane
+                        tab={<span className="flex items-center gap-2 px-4 py-2"><SettingOutlined />通用參數</span>}
+                        key="4"
                         className="p-8"
                     >
                         <div className="max-w-xl space-y-8">
@@ -203,11 +262,11 @@ export const SystemSettings: React.FC = () => {
                         </div>
                     </TabPane>
                 </Tabs>
-            </Card>
+            </Card >
 
             {/* 部門新增 Modal */}
-            <Modal
-                title={<span className="text-xl font-black">新增部門</span>}
+            < Modal
+                title={< span className="text-xl font-black" > 新增部門</span >}
                 visible={isDeptModalVisible}
                 onCancel={() => setIsDeptModalVisible(false)}
                 footer={null}
@@ -229,7 +288,7 @@ export const SystemSettings: React.FC = () => {
                         </Space>
                     </Form.Item>
                 </Form>
-            </Modal>
-        </div>
+            </Modal >
+        </div >
     );
 };

@@ -1,3 +1,5 @@
+import { CourseGroup } from './settings';
+
 export interface Course {
     id: string;
     title: string;
@@ -107,5 +109,26 @@ export const COURSES: Course[] = [
         border: 'border-cyan-100',
         text: 'text-cyan-900',
         btn: 'bg-cyan-600 hover:!bg-cyan-700'
+    }
+];
+
+export const COURSE_GROUPS: CourseGroup[] = [
+    {
+        id: 'group-frontend',
+        name: '前端通識群組',
+        description: '涵蓋 React 與現代化開發必備技能',
+        courseIds: ['course-react', 'course-typescript', 'course-js']
+    },
+    {
+        id: 'group-backend',
+        name: '後端容器群組',
+        description: '雲端原生開發與環境整合核心課程',
+        courseIds: ['course-docker', 'course-csharp', 'course-git']
+    },
+    {
+        id: 'group-onboarding',
+        name: '新人必修群組',
+        description: '所有入職夥伴的共通核心素養',
+        courseIds: ['course-git', 'course-ai']
     }
 ];

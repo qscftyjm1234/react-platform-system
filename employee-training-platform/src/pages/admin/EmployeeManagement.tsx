@@ -18,20 +18,69 @@ import {
     ArrowUpOutlined,
     FilterOutlined,
     ExportOutlined,
-    UsergroupAddOutlined
+    UsergroupAddOutlined,
+    SyncOutlined,
+    SafetyCertificateOutlined
 } from '@ant-design/icons';
+import { message } from 'antd';
 import { KPICard } from '@/components/dashboard/KPICard';
 import { EMPLOYEES, Employee } from '@/data/users';
-import { COURSES } from '@/data/courses';
+import { COURSES, COURSE_GROUPS } from '@/data/courses';
+import { INITIAL_ASSIGNMENT_RULES } from '@/data/settings';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
 export const EmployeeManagement: React.FC = () => {
+    const [employees, setEmployees] = useState<Employee[]>(EMPLOYEES);
     const [searchText, setSearchText] = useState('');
     const [deptFilter, setDeptFilter] = useState('all');
+    const [isSyncing, setIsSyncing] = useState(false);
 
-    const filteredEmployees = EMPLOYEES.filter(emp => {
+    const handleHRSync = () => {
+        setIsSyncing(true);
+        // 模擬與 HR 系統對接的延遲
+        setTimeout(() => {
+            const updatedEmployees = employees.map(emp => {
+                let newProgress = [...emp.progress];
+
+                // 檢查所有規則
+                INITIAL_ASSIGNMENT_RULES.forEach(rule => {
+                    const isTargetDept = rule.targetType === 'dept' && emp.dept === rule.targetValue;
+                    const isTargetRole = rule.targetType === 'role' && emp.role.includes(rule.targetValue);
+
+                    if (isTargetDept || isTargetRole) {
+                        // 1. 分配個別課程
+                        rule.courseIds.forEach(cid => {
+                            if (!newProgress.some(p => p.courseId === cid)) {
+                                newProgress.push({ courseId: cid, progress: 0 });
+                                assignedByRule = true;
+                            }
+                        });
+
+                        // 2. 分配群組課程
+                        rule.groupIds?.forEach(gid => {
+                            const group = COURSE_GROUPS.find(g => g.id === gid);
+                            group?.courseIds.forEach(cid => {
+                                if (!newProgress.some(p => p.courseId === cid)) {
+                                    newProgress.push({ courseId: cid, progress: 0 });
+                                    assignedByRule = true;
+                                }
+                            });
+                        });
+                    }
+                });
+
+                return { ...emp, progress: newProgress };
+            });
+
+            setEmployees(updatedEmployees);
+            setIsSyncing(false);
+            message.success('已成功同步 HR 資料並自動分配學習路徑');
+        }, 1500);
+    };
+
+    const filteredEmployees = employees.filter(emp => {
         const matchesSearch = emp.name.includes(searchText) || emp.id.includes(searchText);
         const matchesDept = deptFilter === 'all' || emp.dept === deptFilter;
         return matchesSearch && matchesDept;
@@ -64,20 +113,28 @@ export const EmployeeManagement: React.FC = () => {
             key: 'progress',
             width: 300,
             render: (_: any, record: Employee) => (
-                <div className="w-full space-y-2">
-                    {record.progress.map(p => {
+                <div className="flex flex-wrap gap-2">
+                    {record.progress.slice(0, 3).map(p => {
                         const course = COURSES.find(c => c.id === p.courseId);
-                        if (!course) return null;
+                        const isAuto = INITIAL_ASSIGNMENT_RULES.some(rule =>
+                            (rule.targetType === 'dept' && record.dept === rule.targetValue && (rule.courseIds.includes(p.courseId) || COURSE_GROUPS.find(g => rule.groupIds?.includes(g.id))?.courseIds.includes(p.courseId)))
+                        );
+
                         return (
-                            <div key={p.courseId} className="flex flex-col gap-1">
-                                <div className="flex justify-between text-[10px]">
-                                    <span className="text-gray-500 font-medium truncate w-32">{course.title.split('：')[0]}</span>
-                                    <span className="text-blue-600 font-bold">{p.progress}%</span>
-                                </div>
-                                <Progress percent={p.progress} size="small" showInfo={false} strokeColor={p.progress === 100 ? '#10B981' : '#3B82F6'} />
-                            </div>
+                            <Tag
+                                key={p.courseId}
+                                className={`m-0 border-none rounded-lg flex items-center gap-1 py-0.5 px-2 text-[11px] font-medium transition-all ${isAuto && p.progress === 0 ? 'bg-blue-50 text-blue-600 ring-1 ring-blue-100 shadow-sm' : 'bg-gray-50 text-gray-500'}`}
+                            >
+                                {course?.title.split('：')[0]}
+                                {isAuto && p.progress === 0 && (
+                                    <SafetyCertificateOutlined className="text-[10px]" title="自動分配" />
+                                )}
+                            </Tag>
                         );
                     })}
+                    {record.progress.length > 3 && (
+                        <Tag className="m-0 border-none bg-gray-100 text-gray-400 font-bold">+{record.progress.length - 3}</Tag>
+                    )}
                 </div>
             ),
         },
@@ -112,9 +169,19 @@ export const EmployeeManagement: React.FC = () => {
                             歡迎來到人才培育基地。這裡您可以掌握每一位夥伴的學習脈動，讓團隊在 <span className="text-white font-bold underline decoration-blue-400 underline-offset-4">AI 時代</span> 保持領先。
                         </Text>
                         <div className="flex flex-wrap gap-4">
-                            <Button type="primary" size="large" icon={<UsergroupAddOutlined />} className="bg-white text-blue-700 border-none font-bold rounded-xl h-12 px-8 hover:!bg-blue-50 transition-all shadow-lg">
-                                新增員工
-                            </Button>
+                            <div className="flex gap-4">
+                                <Button
+                                    icon={<SyncOutlined spin={isSyncing} />}
+                                    onClick={handleHRSync}
+                                    loading={isSyncing}
+                                    className="bg-white/10 border-white/20 text-white hover:!bg-white/20 hover:!text-white rounded-xl h-11 px-6 font-bold"
+                                >
+                                    同步 HR 資料
+                                </Button>
+                                <Button type="primary" icon={<UsergroupAddOutlined />} className="bg-emerald-500 hover:!bg-emerald-600 border-none rounded-xl h-11 px-6 font-bold shadow-lg shadow-emerald-900/20">
+                                    批量匯入員工
+                                </Button>
+                            </div>
                             <Button size="large" icon={<ExportOutlined />} className="bg-white/10 text-white border-white/20 font-bold rounded-xl h-12 px-8 hover:!bg-white/20 transition-all">
                                 匯出全體報表
                             </Button>
