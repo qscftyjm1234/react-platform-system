@@ -24,7 +24,8 @@ import { CommentSection } from '@/components/ui/CommentSection';
 const { Title, Text } = Typography;
 
 export const DockerLessonPage: React.FC = () => {
-    const { lessonId } = useParams();
+    const params = useParams();
+    const lessonId = params.lessonId || '';
     const navigate = useNavigate();
     const { user, completeLesson, completedLessons, isLessonUnlocked } = useAuth();
     const [activeSection, setActiveSection] = React.useState(0);
