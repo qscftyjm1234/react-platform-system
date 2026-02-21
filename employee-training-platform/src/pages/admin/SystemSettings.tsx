@@ -13,7 +13,8 @@ import {
     Divider,
     Select,
     Modal,
-    Input
+    Input,
+    message
 } from 'antd';
 import {
     PlusOutlined,
@@ -286,7 +287,97 @@ export const SystemSettings: React.FC = () => {
                     </TabPane>
                 </Tabs>
             </Card >
+            {/* 課程群組 Modal */}
+            <Modal
+                title={<span className="text-xl font-black">{editingGroup ? '編輯課程群組' : '建立新群組'}</span>}
+                visible={isGroupModalVisible}
+                onCancel={() => setIsGroupModalVisible(false)}
+                onOk={groupForm.submit}
+                okText="儲存群組"
+                cancelText="取消"
+                className="custom-modal"
+                centered
+            >
+                <Form form={groupForm} layout="vertical" onFinish={handleSaveGroup}>
+                    <Form.Item
+                        name="name"
+                        label={<span className="font-bold">群組名稱</span>}
+                        rules={[{ required: true, message: '請輸入群組名稱' }]}
+                    >
+                        <Input placeholder="例如：前端基礎培訓" className="h-10 rounded-lg" />
+                    </Form.Item>
+                    <Form.Item
+                        name="description"
+                        label={<span className="font-bold">群組描述</span>}
+                    >
+                        <Input.TextArea placeholder="簡述此群組的培訓目標" className="rounded-lg" rows={3} />
+                    </Form.Item>
+                    <Form.Item
+                        name="courseIds"
+                        label={<span className="font-bold">包含課程</span>}
+                        rules={[{ required: true, message: '請至少選擇一門課程' }]}
+                    >
+                        <Select mode="multiple" placeholder="選擇課程" className="w-full">
+                            {COURSES.map(course => (
+                                <Option key={course.id} value={course.id}>{course.title}</Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                </Form>
+            </Modal>
 
-        </div >
+            {/* 分配規則 Modal */}
+            <Modal
+                title={<span className="text-xl font-black">{editingRule ? '編輯分配規則' : '新增分配規則'}</span>}
+                visible={isRuleModalVisible}
+                onCancel={() => setIsRuleModalVisible(false)}
+                onOk={ruleForm.submit}
+                okText="儲存規則"
+                cancelText="取消"
+                className="custom-modal"
+                centered
+            >
+                <Form form={ruleForm} layout="vertical" onFinish={handleSaveRule}>
+                    <Form.Item
+                        name="targetType"
+                        label={<span className="font-bold">對象類型</span>}
+                        rules={[{ required: true }]}
+                        initialValue="dept"
+                    >
+                        <Select className="h-10">
+                            <Option value="dept">部門</Option>
+                            <Option value="role">職稱/角色</Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        name="targetValue"
+                        label={<span className="font-bold">目標值</span>}
+                        rules={[{ required: true, message: '請輸入目標值（如：技術研發部）' }]}
+                    >
+                        <Input placeholder="輸入部門名稱或職稱" className="h-10 rounded-lg" />
+                    </Form.Item>
+                    <Form.Item
+                        name="groupIds"
+                        label={<span className="font-bold">關聯課程群組</span>}
+                    >
+                        <Select mode="multiple" placeholder="選擇要指派的群組" className="w-full">
+                            {groups.map(group => (
+                                <Option key={group.id} value={group.id}>{group.name}</Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item
+                        name="courseIds"
+                        label={<span className="font-bold">單獨指派課程 (非選)</span>}
+                    >
+                        <Select mode="multiple" placeholder="加選個別課程" className="w-full">
+                            {COURSES.map(course => (
+                                <Option key={course.id} value={course.id}>{course.title}</Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                </Form>
+            </Modal>
+        </div>
     );
 };
