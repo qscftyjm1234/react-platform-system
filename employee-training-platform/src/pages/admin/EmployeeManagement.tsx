@@ -54,7 +54,6 @@ export const EmployeeManagement: React.FC = () => {
                         rule.courseIds.forEach(cid => {
                             if (!newProgress.some(p => p.courseId === cid)) {
                                 newProgress.push({ courseId: cid, progress: 0 });
-                                assignedByRule = true;
                             }
                         });
 
@@ -64,7 +63,6 @@ export const EmployeeManagement: React.FC = () => {
                             group?.courseIds.forEach(cid => {
                                 if (!newProgress.some(p => p.courseId === cid)) {
                                     newProgress.push({ courseId: cid, progress: 0 });
-                                    assignedByRule = true;
                                 }
                             });
                         });
