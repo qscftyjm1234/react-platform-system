@@ -1,24 +1,20 @@
 import React, { useState } from 'react';
-import { 
-    Table, 
-    Tag, 
-    Space, 
-    Input, 
-    Card, 
-    Row, 
-    Col, 
-    Typography, 
-    Avatar, 
-    Progress, 
+import {
+    Table,
+    Tag,
+    Space,
+    Input,
+    Typography,
+    Avatar,
+    Progress,
     Button,
-    Breadcrumb,
     Select
 } from 'antd';
-import { 
-    SearchOutlined, 
-    UserOutlined, 
-    TeamOutlined, 
-    CheckCircleOutlined, 
+import {
+    SearchOutlined,
+    UserOutlined,
+    TeamOutlined,
+    CheckCircleOutlined,
     ArrowUpOutlined,
     FilterOutlined,
     ExportOutlined,
@@ -124,7 +120,7 @@ export const EmployeeManagement: React.FC = () => {
                             </Button>
                         </div>
                     </div>
-                    
+
                     {/* 快速概覽卡片 */}
                     <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 w-full lg:w-80 shadow-inner">
                         <Text className="text-blue-100 text-xs font-bold uppercase tracking-widest mb-4 block">今日關鍵提示</Text>
@@ -150,7 +146,7 @@ export const EmployeeManagement: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                
+
                 {/* 裝飾性元素 */}
                 <div className="absolute top-[-20%] right-[-10%] w-96 h-96 bg-blue-500 rounded-full blur-[100px] opacity-20" />
                 <div className="absolute bottom-[-20%] left-[20%] w-64 h-64 bg-indigo-500 rounded-full blur-[80px] opacity-20" />
@@ -196,18 +192,18 @@ export const EmployeeManagement: React.FC = () => {
                             <Text className="text-gray-400 text-xs font-medium">即時更新每位夥伴的數位化轉型進程</Text>
                         </div>
                     </div>
-                    
+
                     <div className="flex flex-wrap items-center gap-3">
-                        <Input 
-                            prefix={<SearchOutlined className="text-gray-400" />} 
-                            placeholder="搜尋姓名或員工編號..." 
+                        <Input
+                            prefix={<SearchOutlined className="text-gray-400" />}
+                            placeholder="搜尋姓名或員工編號..."
                             className="w-full md:w-64 h-10 rounded-xl bg-gray-50 border-gray-100 focus:bg-white transition-all"
                             value={searchText}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
                         />
-                        <Select 
-                            defaultValue="all" 
-                            className="w-full md:w-40 h-10 rounded-xl" 
+                        <Select
+                            defaultValue="all"
+                            className="w-full md:w-40 h-10 rounded-xl"
                             suffixIcon={<FilterOutlined />}
                             onChange={setDeptFilter}
                         >
@@ -218,11 +214,11 @@ export const EmployeeManagement: React.FC = () => {
                 </div>
 
                 <div className="overflow-x-auto">
-                    <Table 
-                        columns={columns} 
-                        dataSource={filteredEmployees} 
+                    <Table
+                        columns={columns}
+                        dataSource={filteredEmployees}
                         rowKey="id"
-                        pagination={{ 
+                        pagination={{
                             pageSize: 8,
                             className: "!mt-8 custom-pagination"
                         }}
